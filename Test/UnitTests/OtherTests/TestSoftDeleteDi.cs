@@ -64,9 +64,17 @@ namespace Test.UnitTests.OtherTests
             {
                 _output.WriteLine(log);
             }
-            var service1 = serviceProvider.GetRequiredService<SingleSoftDeleteService<ISingleSoftDelete>>();
-            var service2 = serviceProvider.GetRequiredService<SingleSoftDeleteService<ISingleSoftDeletedDDD>>();
-            var service3 = serviceProvider.GetRequiredService<CascadeSoftDelService<ICascadeSoftDelete>>();
+            serviceProvider.GetRequiredService<SingleSoftDeleteConfiguration<ISingleSoftDelete>>();
+            serviceProvider.GetRequiredService<SingleSoftDeleteConfiguration<ISingleSoftDeletedDDD>>();
+            serviceProvider.GetRequiredService<CascadeSoftDeleteConfiguration<ICascadeSoftDelete>>();
+
+            serviceProvider.GetRequiredService<SingleSoftDeleteService<ISingleSoftDelete>>();
+            serviceProvider.GetRequiredService<SingleSoftDeleteService<ISingleSoftDeletedDDD>>();
+            serviceProvider.GetRequiredService<CascadeSoftDelService<ICascadeSoftDelete>>();
+
+            serviceProvider.GetRequiredService<SingleSoftDeleteServiceAsync<ISingleSoftDelete>>();
+            serviceProvider.GetRequiredService<SingleSoftDeleteServiceAsync<ISingleSoftDeletedDDD>>();
+            serviceProvider.GetRequiredService<CascadeSoftDelServiceAsync<ICascadeSoftDelete>>();
         }
 
     }

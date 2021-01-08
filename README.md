@@ -3,9 +3,9 @@
 This library to provide simple soft delete and cascade soft delete in EF Core. It provides:
 
 - **Useful methods:** The features in this library are:
-  - Set the SoftDeleted flag on an entity class
-  - Provides a query to find all the Soft Deleted entities in the database
-  - Reset the SoftDeleted flag on an entity class
+  - Set the SoftDeleted flag on an entity class, with checks.
+  - Provides a secure query to find all the Soft Deleted entities for a specific entity class.
+  - Reset the SoftDeleted flag on an entity class, which checks.
   - Hard delete (i.e. call EF Core `Remove` method) a entity class, but only if it is already Soft Deleted.  
 *NOTE: Methods can work with entity instance, or found via primary keys. Also has sync and async versions of all methods.*
 - **Cascade Soft Delete:** This library has a service that can mimic the database cascade delete, but Soft Deleting the entities. For instance, Cascade Soft Deleting a Company could also soft delete dependent relationships.
@@ -15,9 +15,12 @@ This library to provide simple soft delete and cascade soft delete in EF Core. I
 
 *The cascade soft delete is pretty clever, and can handle multi-level soft deletes - see [this section](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/#building-solution-3-cascade-softdeleteservice) from my article [EF Core In depth - Soft deleting data with Global Query Filters](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/).*
 
+MIT License.
+
 ## Documentation
 
 Coming soon!
+
 ## Limitations
 
 - When loading via keys it assumes the primary key property(s) are properties.

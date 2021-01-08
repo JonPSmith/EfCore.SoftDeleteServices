@@ -51,6 +51,7 @@ namespace SoftDeleteServices.Configuration
                 var syncService = typeof(SingleSoftDeleteService<>).MakeGenericType(type);
                 var asyncService = typeof(SingleSoftDeleteServiceAsync<>).MakeGenericType(type);
                 services.AddTransient(syncService);
+                services.AddTransient(asyncService);
                 debugLogs.Add($"SoftDeleteServices: registered {syncService.FormDisplayType()} and {asyncService.FormDisplayType()}");
             }
             foreach (var type in cascadeInterfaceTypes.Distinct())
@@ -58,6 +59,7 @@ namespace SoftDeleteServices.Configuration
                 var syncService = typeof(CascadeSoftDelService<>).MakeGenericType(type);
                 var asyncService = typeof(CascadeSoftDelServiceAsync<>).MakeGenericType(type);
                 services.AddTransient(syncService);
+                services.AddTransient(asyncService);
                 debugLogs.Add($"CascadeSoftDeleteServices: registered {syncService.FormDisplayType()} and {asyncService.FormDisplayType()}");
             }
 
@@ -77,7 +79,7 @@ namespace SoftDeleteServices.Configuration
                 var genericPart = implementationType.BaseType.GetGenericArguments();
                 classTypes.Add(genericPart.Single());
 
-                services.AddSingleton(implementationType.BaseType, implementationType);
+                services.AddScoped(implementationType.BaseType, implementationType);  //Scoped because it contains the the DbContext
                 debugLogs.Add($"Registered your configuration class {implementationType.Name}");
             }
 
