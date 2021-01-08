@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SoftDeleteServices</name>
+    </assembly>
+    <members>
+        <member name="T:SoftDeleteServices.Concrete.CascadeSoftDelService`1">
+            <summary>
+            This service handles multiple, cascade soft delete, i.e. it soft deletes an entity and its dependent relationships
+            </summary>
+            <typeparam name="TInterface">You provide the interface you applied to your entity classes to require a boolean flag</typeparam>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.#ctor(SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration{`0})">
+            <summary>
+            This provides a equivalent to a SQL cascade delete, but using a soft delete approach.
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.SetCascadeSoftDeleteViaKeys``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then cascade soft deletes the entity any dependent entities with the correct delete behaviour
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result has the number of entities that have been soft deleted. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.ResetCascadeSoftDeleteViaKeys``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then resets the soft delete flag so it is now visible
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result has the number of entities that have been reset. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.CheckCascadeSoftDeleteViaKeys``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and counts this entity and any dependent entities
+            that are already been cascade soft deleted and are valid to be hard deleted.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Message contains a message to warn what will be deleted if the HardDelete... method is called.
+            Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.HardDeleteSoftDeletedEntriesViaKeys``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and hard deletes this entity and any dependent entities
+            that are already been cascade soft deleted.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result has the number of entities that have been hard deleted. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.SetCascadeSoftDelete``1(``0,System.Boolean)">
+            <summary>
+            This with cascade soft delete this entity and any dependent entities with the correct delete behaviour
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="softDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities that had been cascaded deleted, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.ResetCascadeSoftDelete``1(``0,System.Boolean)">
+            <summary>
+            This will result the cascade soft delete flag on this entity and any dependent entities with the correct delete behaviour and cascade level
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="resetSoftDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities that had been reset, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.CheckCascadeSoftDelete``1(``0)">
+            <summary>
+            This looks for this entity and any dependent entities that are already been cascade soft deleted and are valid to be hard deleted. 
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="checkHardDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities which are eligible for hard delete, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.HardDeleteSoftDeletedEntries``1(``0,System.Boolean)">
+            <summary>
+            This hard deletes this entity and any dependent entities that are already been cascade soft deleted  
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="hardDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities which were hard deleted, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelService`1.GetSoftDeletedEntries``1">
+            <summary>
+            This returns the cascade soft deleted entities of type TEntity that can be reset, i.e. SoftDeleteLevel == 1
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1">
+            <summary>
+            This service handles multiple, cascade soft delete, i.e. it soft deletes an entity and its dependent relationships
+            </summary>
+            <typeparam name="TInterface">You provide the interface you applied to your entity classes to require a boolean flag</typeparam>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.#ctor(SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration{`0})">
+            <summary>
+            This provides a equivalent to a SQL cascade delete, but using a soft delete approach.
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.SetCascadeSoftDeleteViaKeysAsync``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then cascade soft deletes the entity any dependent entities with the correct delete behaviour
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result has the number of entities that have been soft deleted. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.ResetCascadeSoftDeleteViaKeysAsync``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then resets the soft delete flag so it is now visible
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result has the number of entities that have been reset. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.CheckCascadeSoftDeleteViaKeysAsync``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and counts this entity and any dependent entities
+            that are already been cascade soft deleted and are valid to be hard deleted.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Message contains a message to warn what will be deleted if the HardDelete... method is called.
+            Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.HardDeleteSoftDeletedEntriesViaKeysAsync``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and hard deletes this entity and any dependent entities
+            that are already been cascade soft deleted.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result has the number of entities that have been hard deleted. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.SetCascadeSoftDeleteAsync``1(``0,System.Boolean)">
+            <summary>
+            This with cascade soft delete this entity and any dependent entities with the correct delete behaviour
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="softDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities that had been cascaded deleted, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.ResetCascadeSoftDeleteAsync``1(``0,System.Boolean)">
+            <summary>
+            This will result the cascade soft delete flag on this entity and any dependent entities with the correct delete behaviour and cascade level
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="resetSoftDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities that had been reset, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.CheckCascadeSoftDeleteAsync``1(``0)">
+            <summary>
+            This looks for this entity and any dependent entities that are already been cascade soft deleted and are valid to be hard deleted. 
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="checkHardDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities which are eligible for hard delete, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.HardDeleteSoftDeletedEntriesAsync``1(``0,System.Boolean)">
+            <summary>
+            This hard deletes this entity and any dependent entities that are already been cascade soft deleted  
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="hardDeleteThisEntity">entity class with cascade soft delete interface. Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns a status. If no errors then Result contains the number of entities which were hard deleted, plus summary string in Message part</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.CascadeSoftDelServiceAsync`1.GetSoftDeletedEntries``1">
+            <summary>
+            This returns the cascade soft deleted entities of type TEntity that can be reset, i.e. SoftDeleteLevel == 1
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.Internal.CascadeWalker`1.ApplyChangeIfAppropriate(`0,System.Byte)">
+            <summary>
+            This checks if something has to be done for this entity
+            If it should not be changed it returns true, which says don't go any deeper from this entity
+            If it should be changed then it does the change and returns false
+            </summary>
+            <param name="castToCascadeSoftDelete"></param>
+            <param name="cascadeLevel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.Internal.ExpressionBuilder.FilterToGetValueSingleSoftDeletedEntities``2(SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration{``1})">
+            <summary>
+            This returns a where filter that returns all the valid entities that have been single soft deleted
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <typeparam name="TInterface"></typeparam>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.Internal.ExpressionBuilder.FilterToGetValueCascadeSoftDeletedEntities``2(SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration{``1},System.Byte)">
+            <summary>
+            This returns a where filter that returns all the valid entities that have been cascade soft deleted
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <typeparam name="TInterface"></typeparam>
+            <param name="config"></param>
+            <param name="levelToLookFor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.Internal.ExpressionBuilder.FormOtherFiltersOnly``1(System.Collections.Generic.Dictionary{System.Type,System.Linq.Expressions.Expression{System.Func{System.Object,System.Boolean}}})">
+            <summary>
+            This returns all the entities of this type that are valid, e.g. not filtered out by other parts of the Query filters
+            Relies on the user filling in the OtherFilters part of the config
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:SoftDeleteServices.Concrete.SingleSoftDeleteService`1">
+            <summary>
+            This service handles single soft delete, i.e. it only soft deletes a single entity by setting a boolean flag in that entity
+            </summary>
+            <typeparam name="TInterface">You provide the interface you applied to your entity classes to require a boolean flag</typeparam>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.#ctor(SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration{`0})">
+            <summary>
+            Ctor for SoftDeleteService
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.SetSoftDeleteViaKeys``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then set the single soft delete flag so it is hidden
+            </summary>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.ResetSoftDeleteViaKeys``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then it resets the single soft delete flag so it is now visible
+            </summary>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.HardDeleteViaKeys``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then hard deletes it as long as the soft delete flag is set
+            </summary>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.SetSoftDelete(`0,System.Boolean)">
+            <summary>
+            This will single soft delete the entity
+            </summary>
+            <param name="softDeleteThisEntity">Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.ResetSoftDelete(`0,System.Boolean)">
+            <summary>
+            This resets the single soft delete flag so that entity is now visible
+            </summary>
+            <param name="resetSoftDeleteThisEntity">Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if errors</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.HardDeleteSoftDeletedEntry``1(``0,System.Boolean)">
+            <summary>
+            This hard deletes (i.e. calls EF Core's Remove method) for this entity ONLY if it first been soft deleted.
+            This will delete the entity and possibly delete other dependent entities.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="hardDeleteThisEntity">The entity to delete</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges yourself</param>
+            <returns>The number of entities that were deleted. This will include any dependent entities that that had a cascade delete behaviour</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteService`1.GetSoftDeletedEntries``1">
+            <summary>
+            This returns the soft deleted entities of type TEntity
+            If you set up the OtherFilters property in the config then it will apply all the appropriate query filter so you only see the ones you should
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="T:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1">
+            <summary>
+            This service handles single soft delete, i.e. it only soft deletes a single entity by setting a boolean flag in that entity
+            </summary>
+            <typeparam name="TInterface">You provide the interface you applied to your entity classes to require a boolean flag</typeparam>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.#ctor(SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration{`0})">
+            <summary>
+            Ctor for SoftDeleteService
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.SetSoftDeleteViaKeysAsync``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then set the single soft delete flag so it is hidden
+            </summary>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.ResetSoftDeleteViaKeysAsync``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then it resets the single soft delete flag so it is now visible
+            </summary>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.HardDeleteViaKeysAsync``1(System.Object[])">
+            <summary>
+            This finds the entity using its primary key(s) and then hard deletes it as long as the soft delete flag is set
+            </summary>
+            <param name="keyValues">primary key values</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error of Not Found and notFoundAllowed is true</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.SetSoftDeleteAsync(`0,System.Boolean)">
+            <summary>
+            This will soft delete the single entity. This may delete other dependent 
+            </summary>
+            <param name="softDeleteThisEntity">Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if error</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.ResetSoftDeleteAsync(`0,System.Boolean)">
+            <summary>
+            This resets the single soft delete flag so that entity is now visible
+            </summary>
+            <param name="resetSoftDeleteThisEntity">Mustn't be null</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges yourself</param>
+            <returns>Returns status. If not errors then Result return 1 to say it worked. Zero if errors</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.HardDeleteSoftDeletedEntryAsync``1(``0,System.Boolean)">
+            <summary>
+            This hard deletes (i.e. calls EF Core's Remove method) for this entity ONLY if it first been soft deleted.
+            This will delete the entity and possibly delete other dependent entities.
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <param name="hardDeleteThisEntity">The entity to delete</param>
+            <param name="callSaveChanges">Defaults to calling SaveChanges. If set to false, then you must call SaveChanges yourself</param>
+            <returns>The number of entities that were deleted. This will include any dependent entities that that had a cascade delete behaviour</returns>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.SingleSoftDeleteServiceAsync`1.GetSoftDeletedEntries``1">
+            <summary>
+            This returns the soft deleted entities of type TEntity
+            If you set up the OtherFilters property in the config then it will apply all the appropriate query filter so you only see the ones you should
+            </summary>
+            <typeparam name="TEntity"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.BaseSoftDeleteConfiguration.Context">
+            <summary>
+            This is used by the soft delete services to gain access to the specific DbContext used
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.BaseSoftDeleteConfiguration.OtherFilters">
+            <summary>
+            If you have other query filters, such as a multi-tenant system with a UserId or DataKey,
+            then you MUST add the same query(s) to this dictionary.
+            This will apply these filters to all the soft delete commands to make sure you aren't seeing/altering an entry you shouldn't be able to access
+            See this example https://github.com/JonPSmith/EfCore.SoftDeleteServices/blob/master/Test/ExampleConfigs/ConfigSoftDeleteWithUserId.cs 
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.BaseSoftDeleteConfiguration.NotFoundIsNotAnError">
+            <summary>
+            If this property is set to true, then it won't produce an error 
+            This is useful for Web APIs where not finding something require a different return
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.BaseSoftDeleteConfiguration.TextSoftDeletedPastTense">
+            <summary>
+            This text is used in various errors and success messages when talking about soft deleting
+            for instance "This entry is already soft deleted" 
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.GetSoftDeleteValue">
+            <summary>
+            This should contain a LINQ query that returns the soft delete value - MUST work in EF Core query
+            e.g. entity => entity.SoftDeleted
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.SetSoftDeleteValue">
+            <summary>
+            This should contain an action to set the soft delete value
+            e.g. (entity, value) => { entity.SoftDeleted = value; };
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.ReadEveryTime">
+            <summary>
+            If you are using my approach to collections, where a collection is null if it isn't loaded, then you can
+            improve the performance of Cascade soft delete by loading the entity with Includes to load the collections and setting this property to false
+            NOTE: It only works on SetCascadeSoftDelete as on the reset you can't include soft deleted entities 
+            </summary>
+        </member>
+        <member name="M:SoftDeleteServices.Configuration.DiRegisterHelpers.RegisterSoftDelServicesAndYourConfigurations(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Reflection.Assembly[])">
+            <summary>
+            This will scan the assemblies that in
+            </summary>
+            <param name="services"></param>
+            <param name="assembliesWithConfigs"></param>
+            <returns></returns>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration`1.GetSoftDeleteValue">
+            <summary>
+            This should contain a LINQ query that returns the soft delete value - MUST work in EF Core query
+            e.g. entity => entity.SoftDeleted
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration`1.SetSoftDeleteValue">
+            <summary>
+            This should contain an action to set the soft delete value
+            e.g. (entity, value) => { entity.SoftDeleted = value; };
+            </summary>
+        </member>
+    </members>
+</doc>

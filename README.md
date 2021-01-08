@@ -1,33 +1,30 @@
 # EfCore.SoftDeleteServices
 
-This repo contains code to handle soft delete in a generic way. The code handles all the setting, resetting and finding of soft deleted entities. This code also incorporates other Query filters, such as multi-tenant keys, to make sure you only soft delete/reset entities that you have access to.
+This library to provide simple soft delete and cascade soft delete in EF Core. It provides:
 
-I have written two services.  
+- **Useful methods:** The features in this library are:
+  - Set the SoftDeleted flag on an entity class
+  - Provides a query to find all the Soft Deleted entities in the database
+  - Reset the SoftDeleted flag on an entity class
+  - Hard delete (i.e. call EF Core `Remove` method) a entity class, but only if it is already Soft Deleted.  
+*NOTE: Methods can work with entity instance, or found via primary keys. Also has sync and async versions of all methods.*
+- **Cascade Soft Delete:** This library has a service that can mimic the database cascade delete, but Soft Deleting the entities. For instance, Cascade Soft Deleting a Company could also soft delete dependent relationships.
+- **Keeps your data secure:** This library can handle Query Filters that contain multiple parts to the filter, e.g. Soft Delete with a multi-tenant filter. It builds queries that will replace the other filters so that your data stays secure.
+- **Fully configurable:** It works with your properties and interfaces. The only rule it has is your Soft Delete property must be of type `bool`, or for the cascade delete it must be of type `byte`.
+- **DI-friendly:** This library is designed to work with dependency injection (DI) and contains a method which will scan for your Soft Delete configuration files and set up all the services you need to use this library.
 
-- **Single soft delete**: where a single entity class can be hidden from normal queries and restore back if required.
-- **Cascade soft delete**: where when an entity is soft deleted, then its dependent entity classes are also soft deleted.
+*The cascade soft delete is pretty clever, and can handle multi-level soft deletes - see [this section](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/#building-solution-3-cascade-softdeleteservice) from my article [EF Core In depth - Soft deleting data with Global Query Filters](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/).*
 
-*The cascade soft delete is pretty clever, and can handle multi-level soft deletes - see [this sction](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/#building-solution-3-cascade-softdeleteservice) from my article [EF Core In depth – Soft deleting data with Global Query Filters](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/).*
+## Documentation
 
+Coming soon!
 ## Limitations
 
 - When loading via keys it assumes the primary key property(s) are properties.
 - The navigational links have to be properties.
 - Currently the soft delete property can't be a shadow property.
 
-All of these limitattions could be removed, but it takes time to implement and check.
-
-## General information on how the simple and cascade methods work
-
-There four basic things your can do with both the single and cascade libraies 
-1. Set the entity's soft deleted property to hidden, i.e. the entity won't be seen a normal query. 
-2. Reset the entity's soft delete property to not soft deleted, i.e. the entity is  seen in a normal query.
-3. Hard delete any entity(s) that have are already soft deleted (useful protection against hard delete being applied by accident).
-3. Find all the soft deleted items that are soft deleted and can be reset - useful for showing a user the soft deleted 
-
-I lot of things are configuable in the `SoftDeleteConfiguration` class. Its designed to work with your own data layer and interfaces. See the `Test` project for examples of how to use it. 
-
-
+All of these limitations could be removed, but it takes time to implement and check.
 ## Terms
 
 - **Hard delete** is when you delete a row in the database, via the EF Core `Remove` method. A hard delete removes the row from the database and may effect other entities/rows.

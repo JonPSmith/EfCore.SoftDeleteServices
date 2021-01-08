@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -11,5 +11,36 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>EfCore.SoftDeleteServices</PackageId>
+    <PackageVersion>1.0.0-preview001</PackageVersion>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Authors>Jon P Smith</Authors>
+    <Description>Services to provide simple soft delete and cascade soft delete in EF Core.</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>
+      First release.
+    </PackageReleaseNotes>
+    <Copyright>Copyright (c) 2020 Jon P Smith. Licenced under MIT licence</Copyright>
+    <PackageTags>Entity Framework Core</PackageTags>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <ProjectUrl>https://github.com/JonPSmith/EfCore.SoftDeleteServices</ProjectUrl>
+    <RepositoryUrl>https://github.com/JonPSmith/EfCore.SoftDeleteServices</RepositoryUrl>
+    <PackageIcon>SoftDeleteServicesNuGetIcon128.png</PackageIcon>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="SoftDeleteServicesNuGetIcon128.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>SoftDeleteServices.xml</DocumentationFile>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
 
 </Project>
