@@ -4,6 +4,7 @@
 using System;
 using System.Reflection;
 using AssemblyBadConfig1;
+using AssemblyBadConfig2;
 using DataLayer.CascadeEfCode;
 using DataLayer.Interfaces;
 using DataLayer.SingleEfCode;
@@ -82,7 +83,7 @@ namespace Test.UnitTests.OtherTests
         }
 
         [Fact]
-        public void TestRegisterServiceViaProvidedExceptionOnDepBaseTypeOk()
+        public void TestRegisterServiceViaProvidedExceptionOnDepBaseTypeSoftDeleteOk()
         {
             //SETUP
             var services = new ServiceCollection();
@@ -92,7 +93,21 @@ namespace Test.UnitTests.OtherTests
                 services.RegisterSoftDelServicesAndYourConfigurations(Assembly.GetAssembly(typeof(ConfigSoftDelete1))));
 
             //VERIFY
-            ex.Message.ShouldStartWith("Found multiple configurations that use the interface ISingleSoftDelete, which isn't allowed.");
+            ex.Message.ShouldStartWith("Found multiple single soft delete configurations that use the interface ISingleSoftDelete, which the services can't handle.");
+        }
+
+        [Fact]
+        public void TestRegisterServiceViaProvidedExceptionOnDepBaseTypeCascadeDeleteOk()
+        {
+            //SETUP
+            var services = new ServiceCollection();
+
+            //ATTEMPT
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                services.RegisterSoftDelServicesAndYourConfigurations(Assembly.GetAssembly(typeof(ConfigCascadeDelete1))));
+
+            //VERIFY
+            ex.Message.ShouldStartWith("Found multiple cascade soft delete configurations that use the interface ICascadeSoftDelete, which the services can't handle.");
         }
 
     }

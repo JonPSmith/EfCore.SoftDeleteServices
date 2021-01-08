@@ -34,28 +34,22 @@ namespace SoftDeleteServices.Configuration
                 debugLogs.Add($"No assemblies provided so only scanning the calling assembly, .{assembliesWithConfigs.Single().GetName().Name}");
             }
 
-            var singleConfigTypes = new List<Type>();
-            var cascadeConfigTypes = new List<Type>();
+            var singleInterfaceTypes = new List<Type>();
+            var cascadeInterfaceTypes = new List<Type>();
             foreach (var assembly in assembliesWithConfigs)
             {
                 debugLogs.Add($"Starting scanning assembly {assembly.GetName().Name} for your soft delete configurations.");
-                singleConfigTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
+                singleInterfaceTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
                     typeof(SingleSoftDeleteConfiguration<>), assembly));
-                cascadeConfigTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
+                cascadeInterfaceTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
                     typeof(CascadeSoftDeleteConfiguration<>), assembly));
             }
 
-            var singleDups = singleConfigTypes.GroupBy(x => x).Where(g => g.Count() > 1)
-                .Select(y => y.Key).ToList();
-            if (singleDups.Any())
-            {
-                throw new InvalidOperationException($"Found multiple configurations that use the interface {singleDups.First().Name}, which the services can't handle.\n" +
-                                                    "If you have multiple configurations with that interface because you have multiple DbContexts, then you will have to use a different interface for each DbContext.\n" +
-                                                    "E.g. MyContext1 would have interface ISoftDeleted1 and MyContext2 would have interface ISoftDeleted2");
-            }
+            CheckForDuplicates(singleInterfaceTypes, true);
+            CheckForDuplicates(cascadeInterfaceTypes, false);
 
             //Now we register each type of soft delete service based on the interfaces found in the configurations
-            foreach (var type in singleConfigTypes.Distinct())
+            foreach (var type in singleInterfaceTypes)
             {
                 var syncService = typeof(SingleSoftDeleteService<>).MakeGenericType(type);
                 var asyncService = typeof(SingleSoftDeleteServiceAsync<>).MakeGenericType(type);
@@ -63,7 +57,7 @@ namespace SoftDeleteServices.Configuration
                 services.AddTransient(asyncService);
                 debugLogs.Add($"SoftDeleteServices: registered {syncService.FormDisplayType()} and {asyncService.FormDisplayType()}");
             }
-            foreach (var type in cascadeConfigTypes.Distinct())
+            foreach (var type in cascadeInterfaceTypes)
             {
                 var syncService = typeof(CascadeSoftDelService<>).MakeGenericType(type);
                 var asyncService = typeof(CascadeSoftDelServiceAsync<>).MakeGenericType(type);
@@ -73,6 +67,19 @@ namespace SoftDeleteServices.Configuration
             }
 
             return debugLogs;
+        }
+
+        private static void CheckForDuplicates(List<Type> interfaceTypes, bool singleConfig)
+        {
+            var singleDups = interfaceTypes.GroupBy(x => x).Where(g => g.Count() > 1)
+                .Select(y => y.Key).ToList();
+            if (singleDups.Any())
+            {
+                throw new InvalidOperationException(
+                    $"Found multiple {(singleConfig ? "single" : "cascade")} soft delete configurations that use the interface {singleDups.First().Name}, which the services can't handle.\n" +
+                    "If you have multiple configurations with that interface because you have multiple DbContexts, then you will have to use a different interface for each DbContext.\n" +
+                    "E.g. MyContext1 would have interface ISoftDeleted1 and MyContext2 would have interface ISoftDeleted2");
+            }
         }
 
         private static List<Type> RegisterUsersConfigurationsAndReturnInterfaces(this IServiceCollection services,
