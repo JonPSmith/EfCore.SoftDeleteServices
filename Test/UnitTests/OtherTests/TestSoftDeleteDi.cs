@@ -1,6 +1,9 @@
 ﻿// Copyright (c) 2021 Jon P Smith, GitHub: JonPSmith, web: http://www.thereformedprogrammer.net/
 // Licensed under MIT license. See License.txt in the project root for license information.
 
+using System;
+using System.Reflection;
+using AssemblyBadConfig1;
 using DataLayer.CascadeEfCode;
 using DataLayer.Interfaces;
 using DataLayer.SingleEfCode;
@@ -11,6 +14,7 @@ using Test.ExampleConfigs;
 using TestSupport.EfHelpers;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Extensions.AssertExtensions;
 
 namespace Test.UnitTests.OtherTests
 {
@@ -75,6 +79,20 @@ namespace Test.UnitTests.OtherTests
             serviceProvider.GetRequiredService<SingleSoftDeleteServiceAsync<ISingleSoftDelete>>();
             serviceProvider.GetRequiredService<SingleSoftDeleteServiceAsync<ISingleSoftDeletedDDD>>();
             serviceProvider.GetRequiredService<CascadeSoftDelServiceAsync<ICascadeSoftDelete>>();
+        }
+
+        [Fact]
+        public void TestRegisterServiceViaProvidedExceptionOnDepBaseTypeOk()
+        {
+            //SETUP
+            var services = new ServiceCollection();
+
+            //ATTEMPT
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                services.RegisterSoftDelServicesAndYourConfigurations(Assembly.GetAssembly(typeof(ConfigSoftDelete1))));
+
+            //VERIFY
+            ex.Message.ShouldStartWith("Found multiple configurations that use the interface ISingleSoftDelete, which isn't allowed.");
         }
 
     }

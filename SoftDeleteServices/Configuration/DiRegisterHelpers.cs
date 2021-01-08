@@ -34,19 +34,28 @@ namespace SoftDeleteServices.Configuration
                 debugLogs.Add($"No assemblies provided so only scanning the calling assembly, .{assembliesWithConfigs.Single().GetName().Name}");
             }
 
-            var singleInterfaceTypes = new List<Type>();
-            var cascadeInterfaceTypes = new List<Type>();
+            var singleConfigTypes = new List<Type>();
+            var cascadeConfigTypes = new List<Type>();
             foreach (var assembly in assembliesWithConfigs)
             {
                 debugLogs.Add($"Starting scanning assembly {assembly.GetName().Name} for your soft delete configurations.");
-                singleInterfaceTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
+                singleConfigTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
                     typeof(SingleSoftDeleteConfiguration<>), assembly));
-                cascadeInterfaceTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
+                cascadeConfigTypes.AddRange(services.RegisterUsersConfigurationsAndReturnInterfaces(debugLogs,
                     typeof(CascadeSoftDeleteConfiguration<>), assembly));
             }
 
+            var singleDups = singleConfigTypes.GroupBy(x => x).Where(g => g.Count() > 1)
+                .Select(y => y.Key).ToList();
+            if (singleDups.Any())
+            {
+                throw new InvalidOperationException($"Found multiple configurations that use the interface {singleDups.First().Name}, which the services can't handle.\n" +
+                                                    "If you have multiple configurations with that interface because you have multiple DbContexts, then you will have to use a different interface for each DbContext.\n" +
+                                                    "E.g. MyContext1 would have interface ISoftDeleted1 and MyContext2 would have interface ISoftDeleted2");
+            }
+
             //Now we register each type of soft delete service based on the interfaces found in the configurations
-            foreach (var type in singleInterfaceTypes.Distinct())
+            foreach (var type in singleConfigTypes.Distinct())
             {
                 var syncService = typeof(SingleSoftDeleteService<>).MakeGenericType(type);
                 var asyncService = typeof(SingleSoftDeleteServiceAsync<>).MakeGenericType(type);
@@ -54,7 +63,7 @@ namespace SoftDeleteServices.Configuration
                 services.AddTransient(asyncService);
                 debugLogs.Add($"SoftDeleteServices: registered {syncService.FormDisplayType()} and {asyncService.FormDisplayType()}");
             }
-            foreach (var type in cascadeInterfaceTypes.Distinct())
+            foreach (var type in cascadeConfigTypes.Distinct())
             {
                 var syncService = typeof(CascadeSoftDelService<>).MakeGenericType(type);
                 var asyncService = typeof(CascadeSoftDelServiceAsync<>).MakeGenericType(type);

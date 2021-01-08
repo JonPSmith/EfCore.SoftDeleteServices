@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AssemblyBadConfig1\AssemblyBadConfig1.csproj" />
     <ProjectReference Include="..\DataLayer\DataLayer.csproj" />
     <ProjectReference Include="..\SoftDeleteServices\SoftDeleteServices.csproj" />
   </ItemGroup>

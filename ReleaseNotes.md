@@ -2,8 +2,8 @@
 
 ## TODO
 
-* Documentation
-
+- Documentation
+- Add test to capture two classes with the same base type
 
 
 ## 1.0.0
