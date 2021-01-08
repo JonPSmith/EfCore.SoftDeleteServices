@@ -7,10 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SoftDeleteServices.Configuration
 {
+    /// <summary>
+    /// Inherit this class to configure a single soft delete service
+    /// </summary>
+    /// <typeparam name="TInterface"></typeparam>
     public class SingleSoftDeleteConfiguration<TInterface> : BaseSoftDeleteConfiguration 
         where TInterface : class
     {
-        public SingleSoftDeleteConfiguration(DbContext context) : base(context)
+        /// <summary>
+        /// This must be called by your configuration constructor to provide the DbContext to be used
+        /// </summary>
+        /// <param name="context"></param>
+        protected SingleSoftDeleteConfiguration(DbContext context) : base(context)
         {
         }
 

@@ -10,14 +10,19 @@ using SoftDeleteServices.Concrete;
 
 namespace SoftDeleteServices.Configuration
 {
+    /// <summary>
+    /// Holds extension method for finding and registering your Soft Delete configurations and services
+    /// </summary>
     public static class DiRegisterHelpers
     {
         /// <summary>
-        /// This will scan the assemblies that in
+        /// This will scan the assemblies that you provide (or the calling assembly) for your Soft Delete configurations
+        /// who base class is SingleSoftDeleteConfiguration or CascadeSoftDeleteConfiguration.
+        /// From your configurations it will register the correct types of the services you need to call.
         /// </summary>
         /// <param name="services"></param>
-        /// <param name="assembliesWithConfigs"></param>
-        /// <returns></returns>
+        /// <param name="assembliesWithConfigs">If not provided it will scan just the assembly that called this method</param>
+        /// <returns>Logs about what was registered. Useful if the registering doesn't do what you want</returns>
         public static IList<string> RegisterSoftDelServicesAndYourConfigurations(this IServiceCollection services,
             params Assembly[] assembliesWithConfigs)
         {
