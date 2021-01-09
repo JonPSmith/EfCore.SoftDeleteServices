@@ -25,7 +25,7 @@ namespace DataLayer.CascadeEfCode
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeContract> Contracts { get; set; }
 
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<Customer> Companies { get; set; }
         public DbSet<Quote> Quotes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace DataLayer.CascadeEfCode
                 .HasForeignKey<EmployeeContract>(x => x.EmployeeId)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
-            modelBuilder.Entity<Company>()
+            modelBuilder.Entity<Customer>()
                 .HasMany(x => x.Quotes)
                 .WithOne(x => x.BelongsTo)
                 .OnDelete(DeleteBehavior.ClientCascade);

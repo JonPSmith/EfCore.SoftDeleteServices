@@ -405,7 +405,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 context.Database.EnsureCreated();
 
                 //ATTEMPT
-                var company = Company.SeedCompanyWithQuotes(context, userId);
+                var company = Customer.SeedCustomerWithQuotes(context, userId);
 
                 //VERIFY
                 context.Companies.Count().ShouldEqual(1);
@@ -423,7 +423,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();
-                Company.SeedCompanyWithQuotes(context, userId);
+                Customer.SeedCustomerWithQuotes(context, userId);
 
                 //ATTEMPT
                 var query = context.Companies.Include(x => x.Quotes);
@@ -444,8 +444,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();
-                Company.SeedCompanyWithQuotes(context, userId);
-                Company.SeedCompanyWithQuotes(context, userId, "company2");
+                Customer.SeedCustomerWithQuotes(context, userId);
+                Customer.SeedCustomerWithQuotes(context, userId, "company2");
 
                 //ATTEMPT
                 var companies = context.Companies.ToList();
@@ -468,7 +468,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();
-                var company = Company.SeedCompanyWithQuotes(context, userId);
+                var company = Customer.SeedCustomerWithQuotes(context, userId);
 
                 var config = new ConfigCascadeDeleteWithUserId(context);
                 var service = new CascadeSoftDelServiceAsync<ICascadeSoftDelete>(config);
@@ -478,8 +478,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
 
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
-                status.Result.ShouldEqual(1 + 4 + 4);
-                status.Message.ShouldEqual("You have soft deleted an entity and its 8 dependents");
+                status.Result.ShouldEqual(1 + 4 + 4 + (4 * 4));
+                status.Message.ShouldEqual("You have soft deleted an entity and its 24 dependents");
             }
         }
 
@@ -492,14 +492,14 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();
-                var company = Company.SeedCompanyWithQuotes(context, userId);
+                var company = Customer.SeedCustomerWithQuotes(context, userId);
 
                 var config = new ConfigCascadeDeleteWithUserId(context);
                 var service = new CascadeSoftDelServiceAsync<ICascadeSoftDelete>(config);
                 var status = await service.SetCascadeSoftDeleteAsync(company);
 
                 //ATTEMPT
-                var softDeleted = await service.GetSoftDeletedEntries<Company>().ToListAsync();
+                var softDeleted = await service.GetSoftDeletedEntries<Customer>().ToListAsync();
 
                 //VERIFY
                 softDeleted.Count.ShouldEqual(1);
@@ -516,7 +516,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();
-                var company = Company.SeedCompanyWithQuotes(context, userId);
+                var company = Customer.SeedCustomerWithQuotes(context, userId);
                 company.Quotes.First().UserId = Guid.NewGuid();
                 context.SaveChanges();
 
@@ -528,8 +528,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
 
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
-                status.Result.ShouldEqual(1 + 3 + 3);
-                status.Message.ShouldEqual("You have soft deleted an entity and its 6 dependents");
+                status.Result.ShouldEqual(1 + 3 + 3 + (3 * 4));
+                status.Message.ShouldEqual("You have soft deleted an entity and its 18 dependents");
                 context.Quotes.IgnoreQueryFilters().Count(x => x.SoftDeleteLevel != 0).ShouldEqual(3);
             }
         }
@@ -543,7 +543,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();
-                var company = Company.SeedCompanyWithQuotes(context, userId);
+                var company = Customer.SeedCustomerWithQuotes(context, userId);
                 company.Quotes.First().PriceInfo.UserId = Guid.NewGuid();
                 context.SaveChanges();
 
@@ -555,8 +555,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
 
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
-                status.Result.ShouldEqual(1 + 4 + 3);
-                status.Message.ShouldEqual("You have soft deleted an entity and its 7 dependents");
+                status.Result.ShouldEqual(1 + 4 + 3 + (4 * 4));
+                status.Message.ShouldEqual("You have soft deleted an entity and its 23 dependents");
                 context.Set<QuotePrice>().IgnoreQueryFilters().Count(x => x.SoftDeleteLevel != 0).ShouldEqual(3);
             }
         }

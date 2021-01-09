@@ -2,6 +2,7 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using DataLayer.Interfaces;
 
 namespace DataLayer.CascadeEfClasses
@@ -15,10 +16,14 @@ namespace DataLayer.CascadeEfClasses
         //-------------------------------------------------
         // relationships
 
-        public int CompanyId { get; set; }
-        public Company BelongsTo { get; set; }
+        public int CustomerId { get; set; }
+        public Customer BelongsTo { get; set; }
 
         public QuotePrice PriceInfo { get; set; }
+        
+        public ICollection<LineItem> LineItems { get; set; }
+
+        //Soft delete/UserId parts
 
         public byte SoftDeleteLevel { get; set; }
         public Guid UserId { get; set; }
