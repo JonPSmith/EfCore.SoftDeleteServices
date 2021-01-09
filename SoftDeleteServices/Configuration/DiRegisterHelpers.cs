@@ -45,6 +45,9 @@ namespace SoftDeleteServices.Configuration
                     typeof(CascadeSoftDeleteConfiguration<>), assembly));
             }
 
+            if (!singleInterfaceTypes.Any() && !cascadeInterfaceTypes.Any())
+                throw new InvalidOperationException("No soft delete configurations were found");
+
             CheckForDuplicates(singleInterfaceTypes, true);
             CheckForDuplicates(cascadeInterfaceTypes, false);
 
