@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using AssemblyBadConfig1;
 using AssemblyBadConfig2;
+using AssemblyBadConfig3;
 using DataLayer.CascadeEfCode;
 using DataLayer.Interfaces;
 using DataLayer.SingleEfCode;
@@ -94,6 +95,20 @@ namespace Test.UnitTests.OtherTests
 
             //VERIFY
             ex.Message.ShouldStartWith("Found multiple single soft delete configurations that use the interface ISingleSoftDelete, which the services can't handle.");
+        }
+
+        [Fact]
+        public void TestRegisterServiceViaProvidedExceptionOnDepBaseTypeSoftDeleteMultipleOk()
+        {
+            //SETUP
+            var services = new ServiceCollection();
+
+            //ATTEMPT
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                services.RegisterSoftDelServicesAndYourConfigurations(Assembly.GetAssembly(typeof(ConfigSoftDelete3))));
+
+            //VERIFY
+            ex.Message.ShouldStartWith("Found multiple single soft delete configurations that use the interfaces ISingleSoftDelete and ISingleSoftDeletedDDD, which the services can't handle.");
         }
 
         [Fact]

@@ -31,7 +31,7 @@ namespace SoftDeleteServices.Configuration
             if (assembliesWithConfigs.Length == 0)
             {
                 assembliesWithConfigs = new[] { Assembly.GetCallingAssembly() };
-                debugLogs.Add($"No assemblies provided so only scanning the calling assembly, .{assembliesWithConfigs.Single().GetName().Name}");
+                debugLogs.Add($"No assemblies provided so only scanning the calling assembly '{assembliesWithConfigs.Single().GetName().Name}'");
             }
 
             var singleInterfaceTypes = new List<Type>();
@@ -54,16 +54,18 @@ namespace SoftDeleteServices.Configuration
                 var syncService = typeof(SingleSoftDeleteService<>).MakeGenericType(type);
                 var asyncService = typeof(SingleSoftDeleteServiceAsync<>).MakeGenericType(type);
                 services.AddTransient(syncService);
+                debugLogs.Add($"SoftDeleteServices registered as {syncService.FormDisplayType()}");
                 services.AddTransient(asyncService);
-                debugLogs.Add($"SoftDeleteServices: registered {syncService.FormDisplayType()} and {asyncService.FormDisplayType()}");
+                debugLogs.Add($"SoftDeleteServicesAsync registered as {asyncService.FormDisplayType()}");
             }
             foreach (var type in cascadeInterfaceTypes)
             {
                 var syncService = typeof(CascadeSoftDelService<>).MakeGenericType(type);
                 var asyncService = typeof(CascadeSoftDelServiceAsync<>).MakeGenericType(type);
                 services.AddTransient(syncService);
+                debugLogs.Add($"CascadeSoftDeleteServices registered as {syncService.FormDisplayType()}");
                 services.AddTransient(asyncService);
-                debugLogs.Add($"CascadeSoftDeleteServices: registered {syncService.FormDisplayType()} and {asyncService.FormDisplayType()}");
+                debugLogs.Add($"CascadeSoftDeleteServicesAsync registered as {asyncService.FormDisplayType()}");
             }
 
             return debugLogs;
@@ -71,12 +73,14 @@ namespace SoftDeleteServices.Configuration
 
         private static void CheckForDuplicates(List<Type> interfaceTypes, bool singleConfig)
         {
-            var singleDups = interfaceTypes.GroupBy(x => x).Where(g => g.Count() > 1)
+            var dupInterfaces = interfaceTypes.GroupBy(x => x).Where(g => g.Count() > 1)
                 .Select(y => y.Key).ToList();
-            if (singleDups.Any())
+            if (dupInterfaces.Any())
             {
+                var interfaceNames =
+                    $"interface{(dupInterfaces.Count > 1 ? "s" : "")} {string.Join(" and ", dupInterfaces.Select(x => x.Name))}";
                 throw new InvalidOperationException(
-                    $"Found multiple {(singleConfig ? "single" : "cascade")} soft delete configurations that use the interface {singleDups.First().Name}, which the services can't handle.\n" +
+                    $"Found multiple {(singleConfig ? "single" : "cascade")} soft delete configurations that use the {interfaceNames}, which the services can't handle.\n" +
                     "If you have multiple configurations with that interface because you have multiple DbContexts, then you will have to use a different interface for each DbContext.\n" +
                     "E.g. MyContext1 would have interface ISoftDeleted1 and MyContext2 would have interface ISoftDeleted2");
             }
@@ -96,7 +100,7 @@ namespace SoftDeleteServices.Configuration
                 classTypes.Add(genericPart.Single());
 
                 services.AddScoped(implementationType.BaseType, implementationType);  //Scoped because it contains the the DbContext
-                debugLogs.Add($"Registered your configuration class {implementationType.Name}");
+                debugLogs.Add($"Registered your configuration class {implementationType.Name} as {implementationType.BaseType.FormDisplayType()}");
             }
 
             return classTypes;
