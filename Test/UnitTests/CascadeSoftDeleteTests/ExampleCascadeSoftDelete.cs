@@ -11,12 +11,20 @@ using SoftDeleteServices.Concrete;
 using Test.ExampleConfigs;
 using TestSupport.EfHelpers;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Test.UnitTests.CascadeSoftDeleteTests
 {
     public class ExampleCascadeSoftDelete
     {
+        private readonly ITestOutputHelper _output;
+
+        public ExampleCascadeSoftDelete(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void TestCascadeDeleteCompanyQuotesOk()
         {
@@ -64,6 +72,35 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 
                 context.Set<LineItem>().IgnoreQueryFilters().Count(x => x.SoftDeleteLevel != 0).ShouldEqual(4);
                 status.Message.ShouldEqual("You have soft deleted an entity and its 5 dependents");
+            }
+        }
+
+        [Fact]
+        public void TestCascadeDeleteOneQuoteThenStockCheckOk()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<CascadeSoftDelDbContext>();
+            using (var context = new CascadeSoftDelDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                var customer = Customer.SeedCustomerWithQuotes(context, Guid.Empty);
+
+                var config = new ConfigCascadeDeleteWithUserId(context);
+                var service = new CascadeSoftDelService<ICascadeSoftDelete>(config);
+
+                var status = service.SetCascadeSoftDelete(customer.Quotes.First());
+                status.IsValid.ShouldBeTrue(status.GetAllErrors());
+
+                //ATTEMPT
+                var requiredProducts = context.Set<LineItem>().ToList()
+                    .GroupBy(x => x.ProductSku, y => y.NumProduct)
+                    .ToDictionary(x => x.Key, y => y.Sum());
+
+                //VERIFY
+                foreach (var productSku in requiredProducts.Keys)
+                {
+                    _output.WriteLine($"{productSku}: {requiredProducts [productSku]} needed.");
+                }
             }
         }
     }
