@@ -5,8 +5,6 @@ using System.Linq;
 using DataLayer.CascadeEfClasses;
 using DataLayer.CascadeEfCode;
 using DataLayer.Interfaces;
-using DataLayer.SingleEfClasses;
-using DataLayer.SingleEfCode;
 using Microsoft.EntityFrameworkCore;
 using SoftDeleteServices.Concrete;
 using Test.ExampleConfigs;
