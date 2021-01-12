@@ -14,13 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 		ReleaseNotes.md = ReleaseNotes.md
+		TheTwoSoftDeleteTypes.png = TheTwoSoftDeleteTypes.png
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyBadConfig1", "AssemblyBadConfig1\AssemblyBadConfig1.csproj", "{144BB320-786C-4980-A8EF-90AE7A0B1791}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBadConfig1", "AssemblyBadConfig1\AssemblyBadConfig1.csproj", "{144BB320-786C-4980-A8EF-90AE7A0B1791}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyBadConfig2", "AssemblyBadConfig2\AssemblyBadConfig2.csproj", "{F3C9952F-5109-4961-A858-2FDAB5392AB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBadConfig2", "AssemblyBadConfig2\AssemblyBadConfig2.csproj", "{F3C9952F-5109-4961-A858-2FDAB5392AB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyBadConfig3", "AssemblyBadConfig3\AssemblyBadConfig3.csproj", "{B635E32A-7592-4B48-A055-C54492CBC68E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBadConfig3", "AssemblyBadConfig3\AssemblyBadConfig3.csproj", "{B635E32A-7592-4B48-A055-C54492CBC68E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
