@@ -11,7 +11,6 @@ namespace Test.ExampleConfigs
 {
     public class ConfigSoftDeleteShadowDel : SingleSoftDeleteConfiguration<IShadowSoftDelete>
     {
-
         public ConfigSoftDeleteShadowDel(SingleSoftDelDbContext context)
             : base(context)
         {
