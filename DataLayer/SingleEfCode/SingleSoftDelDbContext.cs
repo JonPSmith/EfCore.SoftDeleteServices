@@ -2,6 +2,7 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
+using DataLayer.CascadeEfClasses;
 using DataLayer.CascadeEfCode;
 using DataLayer.Interfaces;
 using DataLayer.SingleEfClasses;
@@ -28,7 +29,6 @@ namespace DataLayer.SingleEfCode
         public DbSet<BookDDD> BookDdds { get; set; }
         
         public DbSet<ShadowDelClass> ShadowDelClasses { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

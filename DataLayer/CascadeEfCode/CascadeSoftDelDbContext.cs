@@ -28,6 +28,8 @@ namespace DataLayer.CascadeEfCode
         public DbSet<Customer> Companies { get; set; }
         public DbSet<Quote> Quotes { get; set; }
 
+        public DbSet<ShadowCascadeDelClass> ShadowCascadeDelClasses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>()
@@ -70,6 +72,11 @@ namespace DataLayer.CascadeEfCode
                 }
                 
             }
+
+            modelBuilder.Entity<ShadowCascadeDelClass>()
+                .Property<byte>("SoftDeleteLevel");
+            modelBuilder.Entity<ShadowCascadeDelClass>()
+                .HasQueryFilter(x => EF.Property<byte>(x, "SoftDeleteLevel") == 0);
         }
     }
 }

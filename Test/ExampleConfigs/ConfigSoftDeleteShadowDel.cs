@@ -15,8 +15,9 @@ namespace Test.ExampleConfigs
         public ConfigSoftDeleteShadowDel(SingleSoftDelDbContext context)
             : base(context)
         {
-            GetSoftDeleteValue = entity => EF.Property<bool>(entity, "SoftDeleted");
-            SetSoftDeleteValue = (entity, value) => { context.Entry(entity).Property("SoftDeleted").CurrentValue = value; }; 
+            GetSoftDeleteValue = entity => (bool)context.Entry(entity).Property("SoftDeleted").CurrentValue;
+            QuerySoftDeleteValue = entity => EF.Property<bool>(entity, "SoftDeleted");
+            SetSoftDeleteValue = (entity, value) => context.Entry(entity).Property("SoftDeleted").CurrentValue = value; 
         }
     }
 }

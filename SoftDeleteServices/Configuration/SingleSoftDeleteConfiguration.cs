@@ -23,10 +23,19 @@ namespace SoftDeleteServices.Configuration
         }
 
         /// <summary>
-        /// This should contain a LINQ query that returns the soft delete value - MUST work in EF Core query
-        /// e.g. entity => entity.SoftDeleted
+        /// This should contain an expression that returns the soft delete value.
+        ///  e.g. entity => entity.SoftDeleted
+        /// Ideally the expression should work in a EF Core query, but if it can't then please provide
+        /// a expression for the <see cref="QuerySoftDeleteValue"/> that does work in a query
         /// </summary>
         public Expression<Func<TInterface, bool>> GetSoftDeleteValue { get; set; }
+
+        /// <summary>
+        /// OPTIONAL: if the <see cref="GetSoftDeleteValue"/> expression can't be used in a LINQ query,
+        /// then you need to provide a query that will work. 
+        /// e.g. <code>EF.Property{bool}(entity, "SoftDeleted");</code> 
+        /// </summary>
+        public Expression<Func<TInterface, bool>> QuerySoftDeleteValue { get; set; }
 
         /// <summary>
         /// This should contain an action to set the soft delete value

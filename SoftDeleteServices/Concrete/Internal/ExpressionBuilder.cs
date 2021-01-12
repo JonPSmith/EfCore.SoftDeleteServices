@@ -28,7 +28,9 @@ namespace SoftDeleteServices.Concrete.Internal
             where TEntity : TInterface
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
-            return FilterToGetSoftDeletedEntities<TEntity,TInterface, bool>(config.GetSoftDeleteValue, config.OtherFilters, true);
+            return FilterToGetSoftDeletedEntities<TEntity,TInterface, bool>(
+                config.QuerySoftDeleteValue ?? config.GetSoftDeleteValue, 
+                config.OtherFilters, true);
         }
 
         /// <summary>
@@ -44,7 +46,9 @@ namespace SoftDeleteServices.Concrete.Internal
             where TInterface : class
             where TEntity : TInterface
         {
-            return FilterToGetSoftDeletedEntities<TEntity, TInterface, byte>(config.GetSoftDeleteValue, config.OtherFilters, levelToLookFor);
+            return FilterToGetSoftDeletedEntities<TEntity, TInterface, byte>(
+                config.QuerySoftDeleteValue ?? config.GetSoftDeleteValue, 
+                config.OtherFilters, levelToLookFor);
         }
 
         private static Expression<Func<TEntity, bool>> FilterToGetSoftDeletedEntities<TEntity, TInterface, TValue>(

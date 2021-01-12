@@ -392,14 +392,23 @@
         </member>
         <member name="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.GetSoftDeleteValue">
             <summary>
-            This should contain a LINQ query that returns the soft delete value - MUST work in EF Core query
-            e.g. entity => entity.SoftDeleted
+            This should contain an expression that returns the soft delete value.
+             e.g. entity => entity.SoftDeletedLevel
+            Ideally the expression should work in a EF Core query, but if it can't then please provide
+            a expression for the <see cref="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.QuerySoftDeleteValue"/> that does work in a query
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.QuerySoftDeleteValue">
+            <summary>
+            OPTIONAL: if the <see cref="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.GetSoftDeleteValue"/> expression can't be used in a LINQ query,
+            then you need to provide a query that will work. 
+            e.g. <code>EF.Property{byte}(entity, "SoftDeletedLevel");</code> 
             </summary>
         </member>
         <member name="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.SetSoftDeleteValue">
             <summary>
             This should contain an action to set the soft delete value
-            e.g. (entity, value) => { entity.SoftDeleted = value; };
+            e.g. (entity, value) => { entity.SoftDeletedLevel = value; };
             </summary>
         </member>
         <member name="P:SoftDeleteServices.Configuration.CascadeSoftDeleteConfiguration`1.ReadEveryTime">
@@ -438,8 +447,17 @@
         </member>
         <member name="P:SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration`1.GetSoftDeleteValue">
             <summary>
-            This should contain a LINQ query that returns the soft delete value - MUST work in EF Core query
-            e.g. entity => entity.SoftDeleted
+            This should contain an expression that returns the soft delete value.
+             e.g. entity => entity.SoftDeleted
+            Ideally the expression should work in a EF Core query, but if it can't then please provide
+            a expression for the <see cref="P:SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration`1.QuerySoftDeleteValue"/> that does work in a query
+            </summary>
+        </member>
+        <member name="P:SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration`1.QuerySoftDeleteValue">
+            <summary>
+            OPTIONAL: if the <see cref="P:SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration`1.GetSoftDeleteValue"/> expression can't be used in a LINQ query,
+            then you need to provide a query that will work. 
+            e.g. <code>EF.Property{bool}(entity, "SoftDeleted");</code> 
             </summary>
         </member>
         <member name="P:SoftDeleteServices.Configuration.SingleSoftDeleteConfiguration`1.SetSoftDeleteValue">
