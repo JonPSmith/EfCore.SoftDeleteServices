@@ -23,13 +23,12 @@ MIT License.
 
 ## Documentation
 
-Coming soon!
+Documentation can be found in the [Repo's Wiki](https://github.com/JonPSmith/EfCore.SoftDeleteServices/wiki).
 
 ## Limitations
 
 - When loading via keys it assumes the primary key property(s) are properties.
 - The navigational links have to be properties.
-- Currently the soft delete property can't be a shadow property.
 
 All of these limitations could be removed, but it takes time to implement and check.
 
