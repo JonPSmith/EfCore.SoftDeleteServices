@@ -161,14 +161,13 @@ namespace SoftDeleteServices.Concrete
         //-----------------------------------------------
         //private methods
 
-        public IStatusGeneric<int> CheckExecuteSoftDelete<TEntity>(
+        private IStatusGeneric<int> CheckExecuteSoftDelete<TEntity>(
             Func<TInterface, bool, IStatusGeneric<int>> softDeleteAction, params object[] keyValues)
             where TEntity : class, TInterface
         {
             var status = new StatusGenericHandler<int>();
             var valueTask = _context.LoadEntityViaPrimaryKeys<TEntity>(_config.OtherFilters, false, keyValues);
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Can only run sync tasks");
+            valueTask.CheckSyncValueTaskWorked();
             if (valueTask.Result == null)
             {
                 if (!_config.NotFoundIsNotAnError)

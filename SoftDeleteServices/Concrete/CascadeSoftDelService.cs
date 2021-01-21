@@ -115,8 +115,7 @@ namespace SoftDeleteServices.Concrete
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.SoftDelete, _config.ReadEveryTime);
             var valueTask = walker.WalkEntitiesSoftDelete(softDeleteThisEntity, 1);
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Can only run sync tasks");
+            valueTask.CheckSyncValueTaskWorked();
             if (callSaveChanges)
                 _context.SaveChanges();
             
@@ -148,8 +147,7 @@ namespace SoftDeleteServices.Concrete
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.ResetSoftDelete, false);
             var valueTask = walker.WalkEntitiesSoftDelete(resetSoftDeleteThisEntity, 1);
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Can only run sync tasks");
+            valueTask.CheckSyncValueTaskWorked();
             if (callSaveChanges)
                 _context.SaveChanges();
 
@@ -174,8 +172,7 @@ namespace SoftDeleteServices.Concrete
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.CheckWhatWillDelete, _config.ReadEveryTime);
             var valueTask = walker.WalkEntitiesSoftDelete(checkHardDeleteThisEntity, 1);
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Can only run sync tasks");
+            valueTask.CheckSyncValueTaskWorked();
             return ReturnSuccessFullResult(CascadeSoftDelWhatDoing.CheckWhatWillDelete, walker.NumFound);
         }
 
@@ -198,8 +195,7 @@ namespace SoftDeleteServices.Concrete
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.HardDeleteSoftDeleted, false);
             var valueTask = walker.WalkEntitiesSoftDelete(hardDeleteThisEntity, 1);
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Can only run sync tasks");
+            valueTask.CheckSyncValueTaskWorked();
             if (callSaveChanges)
                 _context.SaveChanges();
 
@@ -221,14 +217,13 @@ namespace SoftDeleteServices.Concrete
         //---------------------------------------------------------
         //private methods
 
-        public IStatusGeneric<int> CheckExecuteCascadeSoftDelete<TEntity>(
+        private IStatusGeneric<int> CheckExecuteCascadeSoftDelete<TEntity>(
             Func<TInterface, bool, IStatusGeneric<int>> softDeleteAction, params object[] keyValues)
             where TEntity : class, TInterface
         {
             var status = new StatusGenericHandler<int>();
             var valueTask = _context.LoadEntityViaPrimaryKeys<TEntity>(_config.OtherFilters, false, keyValues);
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Can only run sync tasks");
+            valueTask.CheckSyncValueTaskWorked();
             if (valueTask.Result == null)
             {
                 if (!_config.NotFoundIsNotAnError)
