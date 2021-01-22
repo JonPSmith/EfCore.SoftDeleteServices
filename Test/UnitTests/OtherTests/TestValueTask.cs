@@ -24,7 +24,7 @@ namespace Test.UnitTests.OtherTests
         [Flags]
         public enum VTaskOptions { Sync = 0, Async = 1, CancelAsync = 2, ThrowException = 4}
         
-        private async ValueTask ValueTaskMethod(VTaskOptions options)
+        private async ValueTask ValueTaskMethod(VTaskOptions options, int depth = 0)
         {
             if (options.HasFlag(VTaskOptions.Async))
             {
@@ -32,6 +32,13 @@ namespace Test.UnitTests.OtherTests
                     ? new CancellationToken()
                     : CancellationToken.None;
                 await Task.Delay(1, cancelToken);
+            }
+
+            if (depth > 0 && !options.HasFlag(VTaskOptions.Async))
+            {
+                var valueTask = ValueTaskMethod(options, depth - 1);
+                valueTask.CheckSyncValueTaskWorked();
+                return;
             }
 
             if (options.HasFlag(VTaskOptions.ThrowException))
@@ -52,36 +59,6 @@ namespace Test.UnitTests.OtherTests
                 throw new InvalidOperationException("Exception thrown");
 
             return 1;
-        }
-
-        public void CheckSyncValueTaskWorked(ValueTask valueTask)
-        {
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Expected a sync task, but got an async task");
-            if (valueTask.IsFaulted)
-            {
-                var task = valueTask.AsTask();
-                if (task.Exception?.InnerExceptions.Count == 1)
-                    throw task.Exception.InnerExceptions.Single();
-                if (task.Exception == null)
-                    throw new InvalidOperationException("ValueTask faulted but didn't have a exception");
-                throw task.Exception;
-            }
-        }
-
-        public void CheckSyncValueTaskWorked<T>(ValueTask<T> valueTask)
-        {
-            if (!valueTask.IsCompleted)
-                throw new InvalidOperationException("Expected a sync task, but got an async task");
-            if (valueTask.IsFaulted)
-            {
-                var task = valueTask.AsTask();
-                if (task.Exception?.InnerExceptions.Count == 1)
-                    throw task.Exception.InnerExceptions.Single();
-                if (task.Exception == null)
-                    throw new InvalidOperationException("ValueTask faulted but didn't have a exception");
-                throw task.Exception;
-            }
         }
 
         private void CheckSyncValueTask(ValueTask valueTask, VTaskOptions options)
@@ -195,6 +172,24 @@ namespace Test.UnitTests.OtherTests
 
             //VERIFY
             options.ShouldEqual(VTaskOptions.Sync);
+        }
+
+
+        //----------------------------------------------------------------------
+        //sync depth exception
+
+        [Theory]
+        [InlineData(VTaskOptions.Sync)]
+        [InlineData(VTaskOptions.ThrowException)]
+        public void TestValueTaskMethodSyncWithDepthOk(VTaskOptions options)
+        {
+            //SETUP
+
+            //ATTEMPT
+            var valueTask = ValueTaskMethod(options, 1);
+
+            //VERIFY
+            CheckSyncValueTask(valueTask, options);
         }
 
         //----------------------------------------------------------------------

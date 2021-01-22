@@ -70,10 +70,11 @@ namespace SoftDeleteServices.Concrete.Internal
                         var navValueTask = LoadNavigationCollection(principalInstance, navigation, cascadeLevel);
                         if (_isAsync)
                             navValue = await navValueTask;
-                        else if (navValueTask.IsCompleted)
-                            navValue = navValueTask.Result;
                         else
-                            throw new InvalidOperationException("Can only run sync tasks");
+                        {                            
+                            typeof(IEnumerable).CheckSyncValueTaskWorkedDynamic(navValueTask);
+                            navValue = navValueTask.Result;
+                        }
                     }
                     if (navValue == null)
                         return; //no relationship
@@ -82,8 +83,8 @@ namespace SoftDeleteServices.Concrete.Internal
                         var walkValueTask = WalkEntitiesSoftDelete(entity, (byte)(cascadeLevel + 1));
                         if (_isAsync)
                             await walkValueTask;
-                        else if (!walkValueTask.IsCompleted)
-                            throw new InvalidOperationException("Can only run sync tasks");
+                        else
+                            walkValueTask.CheckSyncValueTaskWorked();
                     }
                 }
                 else
@@ -93,18 +94,19 @@ namespace SoftDeleteServices.Concrete.Internal
                         var navValueTask = LoadNavigationSingleton(principalInstance, navigation, cascadeLevel);
                         if (_isAsync)
                             navValue = await navValueTask;
-                        else if (navValueTask.IsCompleted)
-                            navValue = navValueTask.Result;
                         else
-                            throw new InvalidOperationException("Can only run sync tasks");
+                        {
+                            navValueTask.CheckSyncValueTaskWorked();
+                            navValue = navValueTask.Result;
+                        }
                     }
                     if (navValue == null)
                         return; //no relationship
                     var walkValueTask = WalkEntitiesSoftDelete(navValue, (byte)(cascadeLevel + 1));
                     if (_isAsync)
                         await walkValueTask;
-                    else if (!walkValueTask.IsCompleted)
-                        throw new InvalidOperationException("Can only run sync tasks");
+                    else
+                        walkValueTask.CheckSyncValueTaskWorked();
                 }
             }
         }
@@ -151,7 +153,8 @@ namespace SoftDeleteServices.Concrete.Internal
             return false;
         }
 
-        private async ValueTask<IEnumerable> LoadNavigationCollection(object principalInstance, INavigation navigation, byte cascadeLevel)
+        private async ValueTask<IEnumerable> LoadNavigationCollection(object principalInstance, INavigation navigation, 
+            byte cascadeLevel)
         {
             byte levelToLookFor = _whatDoing == CascadeSoftDelWhatDoing.SoftDelete
                 ? (byte)0                     //if soft deleting then look for un-deleted entries
@@ -167,10 +170,10 @@ namespace SoftDeleteServices.Concrete.Internal
             var navValueTask = loader.GetFilteredEntities();
             if (_isAsync)
                 return await navValueTask;
-            if (navValueTask.IsCompleted)
-                return navValueTask.Result;
 
-            throw new InvalidOperationException("Can only run sync tasks");
+            ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(IEnumerable), navValueTask);
+ 
+            return navValueTask.Result;
         }
 
         private class GenericCollectionLoader<TEntity> where TEntity : class, TInterface
@@ -178,7 +181,7 @@ namespace SoftDeleteServices.Concrete.Internal
             private readonly bool _isAsync;
             private readonly IQueryable<TEntity> _queryOfFilteredEntities;
 
-            public async ValueTask<ICollection<TEntity>> GetFilteredEntities()
+            public async ValueTask<IEnumerable> GetFilteredEntities()
             {
                 return _isAsync
                     ? await _queryOfFilteredEntities.ToListAsync()
@@ -212,10 +215,10 @@ namespace SoftDeleteServices.Concrete.Internal
             var navValueTask = loader.GetFilteredSingleton();
             if (_isAsync)
                 return await navValueTask;
-            if (navValueTask.IsCompleted)
-                return navValueTask.Result;
-            
-            throw new InvalidOperationException("Can only run sync tasks");
+
+            ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(object), navValueTask);
+            //navValueTask.CheckSyncValueTaskWorkedDynamic(navValueTask);
+            return navValueTask.Result;
         }
 
         private class GenericSingletonLoader<TEntity> where TEntity : class, TInterface
@@ -223,7 +226,7 @@ namespace SoftDeleteServices.Concrete.Internal
             private readonly bool _isAsync;
             private readonly IQueryable<TEntity> _queryOfFilteredSingle;
 
-            public async ValueTask<TEntity> GetFilteredSingleton()
+            public async ValueTask<object> GetFilteredSingleton()
             {
                 return _isAsync
                     ? await _queryOfFilteredSingle.SingleOrDefaultAsync()

@@ -40,5 +40,20 @@ namespace SoftDeleteServices.Concrete.Internal
                 throw task.Exception;
             }
         }
+
+        public static void CheckSyncValueTaskWorkedDynamic(this Type entityType, dynamic dynamicValueType)
+        {
+            var genericHelperType =
+                typeof(GenericValueTypeChecker<>).MakeGenericType(entityType);
+            Activator.CreateInstance(genericHelperType, (object)dynamicValueType);
+        }
+
+        private class GenericValueTypeChecker<TOut>
+        {
+            public GenericValueTypeChecker(dynamic valueTask)
+            {
+                ((ValueTask<TOut>)valueTask).CheckSyncValueTaskWorked();
+            }
+        }
     }
 }
