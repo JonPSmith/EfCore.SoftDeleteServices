@@ -3,7 +3,14 @@
 ## TODO
 
 - Documentation
-- Implement shadow soft delete
+
+## 1.1.1
+
+- Bug Fix - better handling of exceptions in sync methods
+
+## 1.1.0
+
+- New feature: Can now use shadow properties to hold the soft delete value
 
 ## 1.0.1
 
