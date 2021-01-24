@@ -11,6 +11,12 @@ namespace SoftDeleteServices.Concrete.Internal
 {
     internal static class ValueTaskSyncCheckers
     {
+        /// <summary>
+        /// This will check the <see cref="ValueTask"/> returned
+        /// by a method and ensure it didn't run any async methods.
+        /// Also, if the method threw an exception it will throw that exception.
+        /// </summary>
+        /// <param name="valueTask">The ValueTask from a method that didn't call any async methods</param>
         public static void CheckSyncValueTaskWorked(this ValueTask valueTask)
         {
             if (!valueTask.IsCompleted)
@@ -21,12 +27,18 @@ namespace SoftDeleteServices.Concrete.Internal
                 if (task.Exception?.InnerExceptions.Count == 1)
                     throw task.Exception.InnerExceptions.Single();
                 if (task.Exception == null)
-                    throw new InvalidOperationException("ValueTask faulted but didn't have a exception");
+                    throw new InvalidOperationException("ValueTask faulted but didn't have an exception");
                 throw task.Exception;
             }
         }
 
-        public static void CheckSyncValueTaskWorked<T>(this ValueTask<T> valueTask)
+        /// <summary>
+        /// This will check the <see cref="ValueTask{TResult}"/> returned
+        /// by a method and ensure it didn't run any async methods.
+        /// Also, if the method threw an exception it will throw that exception.
+        /// </summary>
+        /// <param name="valueTask">The ValueTask from a method that didn't call any async methods</param>
+        public static void CheckSyncValueTaskWorked<TResult>(this ValueTask<TResult> valueTask)
         {
             if (!valueTask.IsCompleted)
                 throw new InvalidOperationException("Expected a sync task, but got an async task");
@@ -36,7 +48,7 @@ namespace SoftDeleteServices.Concrete.Internal
                 if (task.Exception?.InnerExceptions.Count == 1)
                     throw task.Exception.InnerExceptions.Single();
                 if (task.Exception == null)
-                    throw new InvalidOperationException("ValueTask faulted but didn't have a exception");
+                    throw new InvalidOperationException("ValueTask faulted but didn't have an exception");
                 throw task.Exception;
             }
         }
@@ -45,14 +57,21 @@ namespace SoftDeleteServices.Concrete.Internal
         {
             var genericHelperType =
                 typeof(GenericValueTypeChecker<>).MakeGenericType(entityType);
-            Activator.CreateInstance(genericHelperType, (object)dynamicValueType);
+            try
+            {
+                Activator.CreateInstance(genericHelperType, (object)dynamicValueType);
+            }
+            catch (Exception e)
+            {
+                throw e?.InnerException ?? e;
+            }
         }
 
-        private class GenericValueTypeChecker<TOut>
+        private class GenericValueTypeChecker<TResult>
         {
             public GenericValueTypeChecker(dynamic valueTask)
             {
-                ((ValueTask<TOut>)valueTask).CheckSyncValueTaskWorked();
+                ((ValueTask<TResult>) valueTask).CheckSyncValueTaskWorked();
             }
         }
     }

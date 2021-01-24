@@ -14,7 +14,7 @@ namespace SoftDeleteServices.Concrete.Internal
     internal static class LoadEntityExtensions
     {
         public static async ValueTask<TEntity> LoadEntityViaPrimaryKeys<TEntity>(this DbContext context,
-            Dictionary<Type, Expression<Func<object, bool>>> otherFilters, bool isAsync,
+            Dictionary<Type, Expression<Func<object, bool>>> otherFilters, bool useAsync,
             params object[] keyValues)
             where TEntity : class
         {
@@ -45,9 +45,9 @@ namespace SoftDeleteServices.Concrete.Internal
             var query = filterOutInvalidEntities == null
                 ? context.Set<TEntity>().IgnoreQueryFilters()
                 : context.Set<TEntity>().IgnoreQueryFilters().Where(filterOutInvalidEntities);
-            return isAsync
-            ? await query.SingleOrDefaultAsync(CreateFilter<TEntity>(keyProps, keyValues))
-            : query.SingleOrDefault(CreateFilter<TEntity>(keyProps, keyValues));
+            return useAsync
+                ? await query.SingleOrDefaultAsync(CreateFilter<TEntity>(keyProps, keyValues))
+                : query.SingleOrDefault(CreateFilter<TEntity>(keyProps, keyValues));
         }
 
         private static Expression<Func<T, bool>> CreateFilter<T>(this IList<PropertyInfo> keyProperties, object[] keyValues)

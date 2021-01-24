@@ -219,6 +219,22 @@
             <typeparam name="TEntity"></typeparam>
             <returns></returns>
         </member>
+        <member name="M:SoftDeleteServices.Concrete.Internal.ValueTaskSyncCheckers.CheckSyncValueTaskWorked(System.Threading.Tasks.ValueTask)">
+            <summary>
+            This will check the <see cref="T:System.Threading.Tasks.ValueTask"/> returned
+            by a method and ensure it didn't run any async methods.
+            Also, if the method threw an exception it will throw that exception.
+            </summary>
+            <param name="valueTask">The ValueTask from a method that didn't call any async methods</param>
+        </member>
+        <member name="M:SoftDeleteServices.Concrete.Internal.ValueTaskSyncCheckers.CheckSyncValueTaskWorked``1(System.Threading.Tasks.ValueTask{``0})">
+            <summary>
+            This will check the <see cref="T:System.Threading.Tasks.ValueTask`1"/> returned
+            by a method and ensure it didn't run any async methods.
+            Also, if the method threw an exception it will throw that exception.
+            </summary>
+            <param name="valueTask">The ValueTask from a method that didn't call any async methods</param>
+        </member>
         <member name="T:SoftDeleteServices.Concrete.SingleSoftDeleteService`1">
             <summary>
             This service handles single soft delete, i.e. it only soft deletes a single entity by setting a boolean flag in that entity

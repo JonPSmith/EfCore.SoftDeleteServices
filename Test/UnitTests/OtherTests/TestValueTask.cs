@@ -28,8 +28,8 @@ namespace Test.UnitTests.OtherTests
         {
             if (options.HasFlag(VTaskOptions.Async))
             {
-                var cancelToken = options.HasFlag(VTaskOptions.Async)
-                    ? new CancellationToken()
+                var cancelToken = options.HasFlag(VTaskOptions.CancelAsync)
+                    ? new CancellationToken(true)
                     : CancellationToken.None;
                 await Task.Delay(1, cancelToken);
             }
@@ -49,10 +49,10 @@ namespace Test.UnitTests.OtherTests
         {
             if (options.HasFlag(VTaskOptions.Async))
             {
-                var cancelToken = options.HasFlag(VTaskOptions.Async)
-                    ? new CancellationToken()
+                var cancelToken = options.HasFlag(VTaskOptions.CancelAsync)
+                    ? new CancellationToken(true)
                     : CancellationToken.None;
-                await Task.Delay(1, cancelToken);
+                await Task.Delay(1000, cancelToken);
             }
 
             if (options.HasFlag(VTaskOptions.ThrowException))
@@ -174,7 +174,6 @@ namespace Test.UnitTests.OtherTests
             options.ShouldEqual(VTaskOptions.Sync);
         }
 
-
         //----------------------------------------------------------------------
         //sync depth exception
 
@@ -190,6 +189,38 @@ namespace Test.UnitTests.OtherTests
 
             //VERIFY
             CheckSyncValueTask(valueTask, options);
+        }
+
+        //----------------------------------------------------------------------
+        // dynamic tests
+
+        [Theory]
+        [InlineData(VTaskOptions.Sync)]
+        [InlineData(VTaskOptions.Async)]
+        [InlineData(VTaskOptions.ThrowException)]
+        public void TestCheckSyncValueTaskIntDynamicWorked(VTaskOptions options)
+        {
+            //SETUP
+            dynamic valueTask = ValueTaskIntMethod(options);
+
+            //ATTEMPT
+            try
+            {
+                ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(int), valueTask);
+            }
+            catch (Exception e)
+            {
+                options.ShouldNotEqual(VTaskOptions.Sync);
+                if (options.HasFlag(VTaskOptions.Async))
+                    e.Message.ShouldEqual("Expected a sync task, but got an async task");
+                if (options.HasFlag(VTaskOptions.ThrowException))
+                    e.Message.ShouldEqual("Exception thrown");
+
+                return;
+            }
+
+            //VERIFY
+            options.ShouldEqual(VTaskOptions.Sync);
         }
 
         //----------------------------------------------------------------------
@@ -210,11 +241,12 @@ namespace Test.UnitTests.OtherTests
             }
             catch
             {
-                options.HasFlag(VTaskOptions.ThrowException).ShouldBeTrue();
+                (options.HasFlag(VTaskOptions.ThrowException) || options.HasFlag(VTaskOptions.CancelAsync)).ShouldBeTrue();
                 return;
             }
 
             //VERIFY
+            options.HasFlag(VTaskOptions.CancelAsync).ShouldBeFalse();
             options.HasFlag(VTaskOptions.ThrowException).ShouldBeFalse();
         }
 
@@ -234,11 +266,12 @@ namespace Test.UnitTests.OtherTests
             }
             catch
             {
-                options.HasFlag(VTaskOptions.ThrowException).ShouldBeTrue();
+                (options.HasFlag(VTaskOptions.ThrowException) || options.HasFlag(VTaskOptions.CancelAsync)).ShouldBeTrue();
                 return;
             }
 
             //VERIFY
+            options.HasFlag(VTaskOptions.CancelAsync).ShouldBeFalse();
             options.HasFlag(VTaskOptions.ThrowException).ShouldBeFalse();
             result.ShouldEqual(1);
         }
