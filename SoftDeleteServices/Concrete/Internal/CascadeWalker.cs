@@ -71,10 +71,7 @@ namespace SoftDeleteServices.Concrete.Internal
                         if (_isAsync)
                             navValue = await navValueTask;
                         else
-                        {                            
-                            typeof(IEnumerable).CheckSyncValueTaskWorkedDynamic(navValueTask);
-                            navValue = navValueTask.Result;
-                        }
+                            navValue = ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamicAndReturnResult<IEnumerable>(navValueTask);
                     }
                     if (navValue == null)
                         return; //no relationship
@@ -95,10 +92,7 @@ namespace SoftDeleteServices.Concrete.Internal
                         if (_isAsync)
                             navValue = await navValueTask;
                         else
-                        {
-                            navValueTask.CheckSyncValueTaskWorked();
-                            navValue = navValueTask.Result;
-                        }
+                            navValue = navValueTask.CheckSyncValueTaskWorkedAndReturnResult();
                     }
                     if (navValue == null)
                         return; //no relationship
@@ -171,9 +165,7 @@ namespace SoftDeleteServices.Concrete.Internal
             if (_isAsync)
                 return await navValueTask;
 
-            ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(IEnumerable), navValueTask);
- 
-            return navValueTask.Result;
+            return ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamicAndReturnResult<IEnumerable>(navValueTask);
         }
 
         private class GenericCollectionLoader<TEntity> where TEntity : class, TInterface
@@ -216,9 +208,7 @@ namespace SoftDeleteServices.Concrete.Internal
             if (_isAsync)
                 return await navValueTask;
 
-            ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(object), navValueTask);
-            //navValueTask.CheckSyncValueTaskWorkedDynamic(navValueTask);
-            return navValueTask.Result;
+            return ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamicAndReturnResult<object>(navValueTask);
         }
 
         private class GenericSingletonLoader<TEntity> where TEntity : class, TInterface

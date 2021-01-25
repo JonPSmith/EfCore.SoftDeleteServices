@@ -114,8 +114,7 @@ namespace SoftDeleteServices.Concrete
 
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.SoftDelete, _config.ReadEveryTime);
-            var valueTask = walker.WalkEntitiesSoftDelete(softDeleteThisEntity, 1);
-            valueTask.CheckSyncValueTaskWorked();
+            walker.WalkEntitiesSoftDelete(softDeleteThisEntity, 1).CheckSyncValueTaskWorked();
             if (callSaveChanges)
                 _context.SaveChanges();
             
@@ -146,8 +145,7 @@ namespace SoftDeleteServices.Concrete
             //For reset you need to read every time because some of the collection might be soft deleted already
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.ResetSoftDelete, false);
-            var valueTask = walker.WalkEntitiesSoftDelete(resetSoftDeleteThisEntity, 1);
-            valueTask.CheckSyncValueTaskWorked();
+            walker.WalkEntitiesSoftDelete(resetSoftDeleteThisEntity, 1).CheckSyncValueTaskWorked(); ;
             if (callSaveChanges)
                 _context.SaveChanges();
 
@@ -171,8 +169,7 @@ namespace SoftDeleteServices.Concrete
             //For reset you need to read every time because some of the collection might be soft deleted already
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.CheckWhatWillDelete, _config.ReadEveryTime);
-            var valueTask = walker.WalkEntitiesSoftDelete(checkHardDeleteThisEntity, 1);
-            valueTask.CheckSyncValueTaskWorked();
+            walker.WalkEntitiesSoftDelete(checkHardDeleteThisEntity, 1).CheckSyncValueTaskWorked();
             return ReturnSuccessFullResult(CascadeSoftDelWhatDoing.CheckWhatWillDelete, walker.NumFound);
         }
 
@@ -194,8 +191,7 @@ namespace SoftDeleteServices.Concrete
             //For reset you need to read every time because some of the collection might be soft deleted already
             var walker = new CascadeWalker<TInterface>(_context, _config, false,
                 CascadeSoftDelWhatDoing.HardDeleteSoftDeleted, false);
-            var valueTask = walker.WalkEntitiesSoftDelete(hardDeleteThisEntity, 1);
-            valueTask.CheckSyncValueTaskWorked();
+            walker.WalkEntitiesSoftDelete(hardDeleteThisEntity, 1).CheckSyncValueTaskWorked();
             if (callSaveChanges)
                 _context.SaveChanges();
 
@@ -222,16 +218,16 @@ namespace SoftDeleteServices.Concrete
             where TEntity : class, TInterface
         {
             var status = new StatusGenericHandler<int>();
-            var valueTask = _context.LoadEntityViaPrimaryKeys<TEntity>(_config.OtherFilters, false, keyValues);
-            valueTask.CheckSyncValueTaskWorked();
-            if (valueTask.Result == null)
+            var entity = _context.LoadEntityViaPrimaryKeys<TEntity>(_config.OtherFilters, false, keyValues)
+                .CheckSyncValueTaskWorkedAndReturnResult();
+            if (entity == null)
             {
                 if (!_config.NotFoundIsNotAnError)
                     status.AddError("Could not find the entry you ask for.");
                 return status;
             }
 
-            return softDeleteAction(valueTask.Result, true);
+            return softDeleteAction(entity, true);
         }
 
         private IStatusGeneric<int> ReturnSuccessFullResult(CascadeSoftDelWhatDoing whatDoing, int numFound)

@@ -158,7 +158,7 @@ namespace Test.UnitTests.OtherTests
             //ATTEMPT
             try
             {
-                valueTaskInt.CheckSyncValueTaskWorked();
+                valueTaskInt.CheckSyncValueTaskWorkedAndReturnResult();
             }
             catch (Exception e)
             {
@@ -206,13 +206,12 @@ namespace Test.UnitTests.OtherTests
             }
             catch (Exception e)
             {
-
                 e.Message.ShouldEqual("Exception thrown");
                 var stackTraceLines = e.StackTrace.Split('\n').Select(x => x.Trim()).ToArray();
                 stackTraceLines[0].ShouldContain("TestValueTask.ValueTaskMethod(VTaskOptions options, Int32 depth)");
                 stackTraceLines[0].ShouldEndWith("46");
                 stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorked(ValueTask valueTask)");
-                stackTraceLines[1].ShouldEndWith("26");
+                stackTraceLines[1].ShouldEndWith("27");
                 stackTraceLines[2].ShouldContain("TestValueTask.ValueTaskMethod(VTaskOptions options, Int32 depth)");
                 stackTraceLines[2].ShouldEndWith("41");
 
@@ -233,7 +232,7 @@ namespace Test.UnitTests.OtherTests
             //ATTEMPT
             try
             {
-                valueTask.CheckSyncValueTaskWorked();
+                valueTask.CheckSyncValueTaskWorkedAndReturnResult();
             }
             catch (Exception e)
             {
@@ -242,8 +241,8 @@ namespace Test.UnitTests.OtherTests
                 var stackTraceLines = e.StackTrace.Split('\n').Select(x => x.Trim()).ToArray();
                 stackTraceLines[0].ShouldContain("TestValueTask.ValueTaskIntMethod(VTaskOptions options)");
                 stackTraceLines[0].ShouldEndWith("62");
-                stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorked[TResult](ValueTask`1 valueTask)");
-                stackTraceLines[1].ShouldEndWith("40");
+                stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorkedAndReturnResult[TResult](ValueTask`1 valueTask)");
+                stackTraceLines[1].ShouldEndWith("42");
                 stackTraceLines.Length.ShouldEqual(3);
 
                 return;
@@ -264,11 +263,12 @@ namespace Test.UnitTests.OtherTests
         {
             //SETUP
             dynamic valueTask = ValueTaskIntMethod(options);
-
+            int result = 0;
+            
             //ATTEMPT
             try
             {
-                ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(int), valueTask);
+                result = ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamicAndReturnResult<int>(valueTask);
             }
             catch (Exception e)
             {
@@ -283,6 +283,7 @@ namespace Test.UnitTests.OtherTests
 
             //VERIFY
             options.ShouldEqual(VTaskOptions.Sync);
+            result.ShouldEqual(1);
         }
 
         //WARNING: These line numbers can move!!
@@ -295,7 +296,7 @@ namespace Test.UnitTests.OtherTests
             //ATTEMPT
             try
             {
-                ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(int), valueTask);
+                var result = ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamicAndReturnResult<int>(valueTask);
             }
             catch (Exception e)
             {
@@ -304,8 +305,8 @@ namespace Test.UnitTests.OtherTests
                 var stackTraceLines = e.StackTrace.Split('\n').Select(x => x.Trim()).ToArray();
                 stackTraceLines[0].ShouldContain("TestValueTask.ValueTaskIntMethod(VTaskOptions options)");
                 stackTraceLines[0].ShouldEndWith("62");
-                stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorked[TResult](ValueTask`1 valueTask)");
-                stackTraceLines[1].ShouldEndWith("40");
+                stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorkedAndReturnResult[TResult](ValueTask`1 valueTask)");
+                stackTraceLines[1].ShouldEndWith("42");
                 stackTraceLines[2].ShouldContain("ValueTaskSyncCheckers.GenericValueTypeChecker`1..ctor(Object valueTask)");
                 stackTraceLines[2].ShouldEndWith("61");
                 stackTraceLines[3].ShouldEqual("--- End of stack trace from previous location where exception was thrown ---");

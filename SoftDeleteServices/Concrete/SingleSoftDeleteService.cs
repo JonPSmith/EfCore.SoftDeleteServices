@@ -166,16 +166,16 @@ namespace SoftDeleteServices.Concrete
             where TEntity : class, TInterface
         {
             var status = new StatusGenericHandler<int>();
-            var valueTask = _context.LoadEntityViaPrimaryKeys<TEntity>(_config.OtherFilters, false, keyValues);
-            valueTask.CheckSyncValueTaskWorked();
-            if (valueTask.Result == null)
+            var result = _context.LoadEntityViaPrimaryKeys<TEntity>(_config.OtherFilters, false, keyValues)
+                .CheckSyncValueTaskWorkedAndReturnResult();
+            if (result == null)
             {
                 if (!_config.NotFoundIsNotAnError)
                     status.AddError("Could not find the entry you ask for.");
                 return status;
             }
 
-            return softDeleteAction(valueTask.Result, true);
+            return softDeleteAction(result, true);
         }
     }
 }
