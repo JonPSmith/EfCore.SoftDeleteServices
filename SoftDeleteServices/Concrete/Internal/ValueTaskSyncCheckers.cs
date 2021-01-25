@@ -44,8 +44,6 @@ namespace SoftDeleteServices.Concrete.Internal
 
         public static TResult CheckSyncValueTaskWorkedDynamicAndReturnResult<TResult>(dynamic dynamicValueType)
         {
-            var genericHelperType =
-                typeof(GenericValueTypeChecker<>).MakeGenericType(typeof(TResult));
             try
             {
                 var runner = Activator.CreateInstance(typeof(GenericValueTypeChecker<TResult>), 
