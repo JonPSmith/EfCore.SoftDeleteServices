@@ -1,11 +1,8 @@
 # Release Notes
 
-## TODO
-
-
 ## 1.1.2
 
-Bug Fix - better handling of exceptions in sync methods (added better stacktrace)
+- Bug Fix - better handling of exceptions in sync methods (added better stacktrace)
 
 ## 1.1.1
 
@@ -17,7 +14,7 @@ Bug Fix - better handling of exceptions in sync methods (added better stacktrace
 
 ## 1.0.1
 
-- Added test to throw exception if no soft deleet configuration not found.
+- Added test to throw exception if no soft delete configuration not found.
 
 ## 1.0.0
 
