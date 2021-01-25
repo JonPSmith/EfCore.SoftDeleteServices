@@ -308,7 +308,7 @@ namespace Test.UnitTests.OtherTests
                 stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorkedAndReturnResult[TResult](ValueTask`1 valueTask)");
                 stackTraceLines[1].ShouldEndWith("42");
                 stackTraceLines[2].ShouldContain("ValueTaskSyncCheckers.GenericValueTypeChecker`1..ctor(Object valueTask)");
-                stackTraceLines[2].ShouldEndWith("61");
+                stackTraceLines[2].ShouldEndWith("69");
                 stackTraceLines[3].ShouldEqual("--- End of stack trace from previous location where exception was thrown ---");
 
                 return;
