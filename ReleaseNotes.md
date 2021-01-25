@@ -2,7 +2,10 @@
 
 ## TODO
 
-- Documentation
+
+## 1.1.2
+
+Bug Fix - better handling of exceptions in sync methods (added better stacktrace)
 
 ## 1.1.1
 

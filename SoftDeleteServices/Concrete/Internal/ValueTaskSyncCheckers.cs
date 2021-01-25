@@ -4,6 +4,7 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 [assembly: InternalsVisibleTo("Test")]
@@ -21,15 +22,8 @@ namespace SoftDeleteServices.Concrete.Internal
         {
             if (!valueTask.IsCompleted)
                 throw new InvalidOperationException("Expected a sync task, but got an async task");
-            if (valueTask.IsFaulted)
-            {
-                var task = valueTask.AsTask();
-                if (task.Exception?.InnerExceptions.Count == 1)
-                    throw task.Exception.InnerExceptions.Single();
-                if (task.Exception == null)
-                    throw new InvalidOperationException("ValueTask faulted but didn't have an exception");
-                throw task.Exception;
-            }
+            if (valueTask.IsFaulted) 
+                valueTask.GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -42,15 +36,8 @@ namespace SoftDeleteServices.Concrete.Internal
         {
             if (!valueTask.IsCompleted)
                 throw new InvalidOperationException("Expected a sync task, but got an async task");
-            if (valueTask.IsFaulted)
-            {
-                var task = valueTask.AsTask();
-                if (task.Exception?.InnerExceptions.Count == 1)
-                    throw task.Exception.InnerExceptions.Single();
-                if (task.Exception == null)
-                    throw new InvalidOperationException("ValueTask faulted but didn't have an exception");
-                throw task.Exception;
-            }
+            if (valueTask.IsFaulted) 
+                valueTask.GetAwaiter().GetResult();
         }
 
         public static void CheckSyncValueTaskWorkedDynamic(this Type tResultType, dynamic dynamicValueType)
@@ -63,7 +50,7 @@ namespace SoftDeleteServices.Concrete.Internal
             }
             catch (Exception e)
             {
-                throw e?.InnerException ?? e;
+                ExceptionDispatchInfo.Capture(e?.InnerException ?? e).Throw();
             }
         }
 

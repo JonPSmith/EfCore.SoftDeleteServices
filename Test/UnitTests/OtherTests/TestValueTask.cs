@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SoftDeleteServices.Concrete.Internal;
+using TestSupport.Attributes;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
@@ -191,6 +192,67 @@ namespace Test.UnitTests.OtherTests
             CheckSyncValueTask(valueTask, options);
         }
 
+        //WARNING: These line numbers can move!!
+        [RunnableInDebugOnly]
+        public void TestValueTaskMethodSyncWithDepthStackTraceOk()
+        {
+            //SETUP
+            var valueTask = ValueTaskMethod(VTaskOptions.ThrowException, 1);
+
+            //ATTEMPT
+            try
+            {
+                valueTask.CheckSyncValueTaskWorked();
+            }
+            catch (Exception e)
+            {
+
+                e.Message.ShouldEqual("Exception thrown");
+                var stackTraceLines = e.StackTrace.Split('\n').Select(x => x.Trim()).ToArray();
+                stackTraceLines[0].ShouldContain("TestValueTask.ValueTaskMethod(VTaskOptions options, Int32 depth)");
+                stackTraceLines[0].ShouldEndWith("46");
+                stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorked(ValueTask valueTask)");
+                stackTraceLines[1].ShouldEndWith("26");
+                stackTraceLines[2].ShouldContain("TestValueTask.ValueTaskMethod(VTaskOptions options, Int32 depth)");
+                stackTraceLines[2].ShouldEndWith("41");
+
+                return;
+            }
+
+            //VERIFY
+            Assert.False(true, "Should have thrown exception");
+        }
+
+        //WARNING: These line numbers can move!!
+        [RunnableInDebugOnly]
+        public void TestValueTaskIntMethodSyncStackTraceOk()
+        {
+            //SETUP
+            var valueTask = ValueTaskIntMethod(VTaskOptions.ThrowException);
+
+            //ATTEMPT
+            try
+            {
+                valueTask.CheckSyncValueTaskWorked();
+            }
+            catch (Exception e)
+            {
+
+                e.Message.ShouldEqual("Exception thrown");
+                var stackTraceLines = e.StackTrace.Split('\n').Select(x => x.Trim()).ToArray();
+                stackTraceLines[0].ShouldContain("TestValueTask.ValueTaskIntMethod(VTaskOptions options)");
+                stackTraceLines[0].ShouldEndWith("62");
+                stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorked[TResult](ValueTask`1 valueTask)");
+                stackTraceLines[1].ShouldEndWith("40");
+                stackTraceLines.Length.ShouldEqual(3);
+
+                return;
+            }
+
+            //VERIFY
+            Assert.False(true, "Should have thrown exception");
+        }
+
         //----------------------------------------------------------------------
         // dynamic tests
 
@@ -221,6 +283,38 @@ namespace Test.UnitTests.OtherTests
 
             //VERIFY
             options.ShouldEqual(VTaskOptions.Sync);
+        }
+
+        //WARNING: These line numbers can move!!
+        [RunnableInDebugOnly]
+        public void TestCheckSyncValueTaskIntDynamicWorkedStackTraceOk()
+        {
+            //SETUP
+            dynamic valueTask = ValueTaskIntMethod(VTaskOptions.ThrowException);
+
+            //ATTEMPT
+            try
+            {
+                ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamic(typeof(int), valueTask);
+            }
+            catch (Exception e)
+            {
+
+                e.Message.ShouldEqual("Exception thrown");
+                var stackTraceLines = e.StackTrace.Split('\n').Select(x => x.Trim()).ToArray();
+                stackTraceLines[0].ShouldContain("TestValueTask.ValueTaskIntMethod(VTaskOptions options)");
+                stackTraceLines[0].ShouldEndWith("62");
+                stackTraceLines[1].ShouldContain("ValueTaskSyncCheckers.CheckSyncValueTaskWorked[TResult](ValueTask`1 valueTask)");
+                stackTraceLines[1].ShouldEndWith("40");
+                stackTraceLines[2].ShouldContain("ValueTaskSyncCheckers.GenericValueTypeChecker`1..ctor(Object valueTask)");
+                stackTraceLines[2].ShouldEndWith("61");
+                stackTraceLines[3].ShouldEqual("--- End of stack trace from previous location where exception was thrown ---");
+
+                return;
+            }
+
+            //VERIFY
+            Assert.False(true, "Should have thrown exception");
         }
 
         //----------------------------------------------------------------------
