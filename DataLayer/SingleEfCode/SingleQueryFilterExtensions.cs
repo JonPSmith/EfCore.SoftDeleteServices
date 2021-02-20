@@ -24,7 +24,12 @@ namespace DataLayer.SingleEfCode
                 .MakeGenericMethod(entityData.ClrType);
             var filter = methodToCall                              
                 .Invoke(null, new object[] { userIdProvider });                   
-            entityData.SetQueryFilter((LambdaExpression)filter);   
+            entityData.SetQueryFilter((LambdaExpression)filter);
+            if (queryFilterType == SingleQueryFilterTypes.SingleSoftDelete ||
+                queryFilterType == SingleQueryFilterTypes.SingleSoftDeleteDdd)
+                entityData.AddIndex(entityData.FindProperty(nameof(ISingleSoftDelete.SoftDeleted)));
+            if (queryFilterType == SingleQueryFilterTypes.SingleSoftDeleteAndUserId)
+                entityData.AddIndex(entityData.FindProperty(nameof(IUserId.UserId)));
         }
 
         private static LambdaExpression GetSingleSoftDeleteFilter<TEntity>(IUserId userIdProvider)

@@ -25,6 +25,14 @@ namespace DataLayer.CascadeEfCode
             var filter = methodToCall
                 .Invoke(null, new object[] { userIdProvider });
             entityData.SetQueryFilter((LambdaExpression)filter);
+
+            if (queryFilterType == CascadeQueryFilterTypes.CascadeSoftDelete)
+                entityData.AddIndex(entityData.FindProperty(nameof(ICascadeSoftDelete.SoftDeleteLevel)));
+            if (queryFilterType == CascadeQueryFilterTypes.CascadeSoftDeleteAndUserId ||
+                queryFilterType == CascadeQueryFilterTypes.CascadeAndSingleAndUserId)
+                entityData.AddIndex(entityData.FindProperty(nameof(IUserId.UserId)));
+            if (queryFilterType == CascadeQueryFilterTypes.CascadeAndSingleAndUserId)
+                entityData.AddIndex(entityData.FindProperty(nameof(ISingleSoftDelete.SoftDeleted)));
         }
 
         private static LambdaExpression GetCascadeSoftDeleteFilter<TEntity>(IUserId userIdProvider)

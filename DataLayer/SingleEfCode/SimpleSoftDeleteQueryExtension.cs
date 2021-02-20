@@ -21,6 +21,7 @@ namespace DataLayer.SingleEfCode
                 .MakeGenericMethod(entityData.ClrType);
             var filter = methodToCall.Invoke(null, new object[] { });
             entityData.SetQueryFilter((LambdaExpression)filter);
+            entityData.AddIndex(entityData.FindProperty(nameof(ISingleSoftDelete.SoftDeleted)));
         }
 
         private static LambdaExpression GetSoftDeleteFilter<TEntity>()
