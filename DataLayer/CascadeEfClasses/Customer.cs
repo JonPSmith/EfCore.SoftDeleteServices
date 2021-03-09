@@ -12,6 +12,9 @@ namespace DataLayer.CascadeEfClasses
     {
         public int Id { get; set; }
 
+        public int? AddressId { get; set; }
+        public Address Address { get; set; }
+
         public string CompanyName { get; set; }
 
         public HashSet<Quote> Quotes { get; set; }
@@ -31,7 +34,7 @@ namespace DataLayer.CascadeEfClasses
             {
                 customer.Quotes.Add(
                     new Quote {
-                        Name = $"quote{i}", UserId = userId, 
+                        Name = $"quote{i}", UserId = userId,
                         PriceInfo = new QuotePrice {UserId = userId, Price = i},
                         LineItems = new List<LineItem>
                         {

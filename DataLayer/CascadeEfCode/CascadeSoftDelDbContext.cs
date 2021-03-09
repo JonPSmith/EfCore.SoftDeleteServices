@@ -25,6 +25,7 @@ namespace DataLayer.CascadeEfCode
         public DbSet<Employee> Employees { get; set; }
         public DbSet<EmployeeContract> Contracts { get; set; }
 
+        public DbSet<Address> Addresses { get; set; }
         public DbSet<Customer> Companies { get; set; }
         public DbSet<Quote> Quotes { get; set; }
 
@@ -70,7 +71,7 @@ namespace DataLayer.CascadeEfCode
                     else
                         entityType.SetCascadeQueryFilter(CascadeQueryFilterTypes.CascadeSoftDelete, this);
                 }
-                
+
             }
 
             modelBuilder.Entity<ShadowCascadeDelClass>()

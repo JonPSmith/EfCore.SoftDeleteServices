@@ -23,11 +23,12 @@ namespace DataLayer.SingleEfCode
             UserId = userId;
         }
 
+        public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<BookDDD> BookDdds { get; set; }
-        
+
         public DbSet<ShadowDelClass> ShadowDelClasses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

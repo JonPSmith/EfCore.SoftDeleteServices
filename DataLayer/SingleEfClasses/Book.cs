@@ -12,6 +12,9 @@ namespace DataLayer.SingleEfClasses
         public string Title { get; set; }
         public bool SoftDeleted { get; set; }
 
+        public int? AuthorId { get; set; }
+        public Author Author { get; set; }
+
         public ICollection<Review> Reviews { get; set; }
     }
 }
