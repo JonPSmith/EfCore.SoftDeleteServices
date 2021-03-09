@@ -11,6 +11,8 @@ namespace DataLayer.CascadeEfClasses
         [Key]
         public int EmployeeId { get; set; }
 
+        public Employee Employee { get; set; }
+
         public string ContractText { get; set; }
 
         public byte SoftDeleteLevel { get; set; }

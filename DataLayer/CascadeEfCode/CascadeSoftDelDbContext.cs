@@ -40,7 +40,7 @@ namespace DataLayer.CascadeEfCode
 
             modelBuilder.Entity<Employee>()
                 .HasOne(x => x.Contract)
-                .WithOne()
+                .WithOne(x => x.Employee)
                 .HasForeignKey<EmployeeContract>(x => x.EmployeeId)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
