@@ -103,7 +103,7 @@ namespace SoftDeleteServices.Concrete
 
             //If is a one-to-one entity we return an error
             var keys = _context.Entry(softDeleteThisEntity).Metadata.GetForeignKeys();
-            if (!keys.All(x => x.DependentToPrincipal?.IsCollection == true || x.PrincipalToDependent?.IsCollection == true))
+            if (keys.Any(x => x.DependentToPrincipal?.IsCollection == false && x.PrincipalToDependent?.IsCollection == false))
                 //This it is a one-to-one entity
                 throw new InvalidOperationException("You cannot soft delete a one-to-one relationship. " +
                                                     "It causes problems if you try to create a new version.");
