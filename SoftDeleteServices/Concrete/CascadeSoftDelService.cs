@@ -100,13 +100,7 @@ namespace SoftDeleteServices.Concrete
             where TEntity : class, TInterface
         {
             if (softDeleteThisEntity == null) throw new ArgumentNullException(nameof(softDeleteThisEntity));
-
-            //If is a one-to-one entity we return an error
-            var keys = _context.Entry(softDeleteThisEntity).Metadata.GetForeignKeys();
-            if (!keys.All(x => x.DependentToPrincipal?.IsCollection == true || x.PrincipalToDependent?.IsCollection == true))
-                //This it is a one-to-one entity
-                throw new InvalidOperationException("You cannot soft delete a one-to-one relationship. " +
-                                                    "It causes problems if you try to create a new version.");
+            _context.ThrowExceptionIfPrincipalOneToOne(softDeleteThisEntity);
 
             var status = new StatusGenericHandler<int>();
             if (_config.GetSoftDeleteValue.Compile().Invoke(softDeleteThisEntity) != 0)

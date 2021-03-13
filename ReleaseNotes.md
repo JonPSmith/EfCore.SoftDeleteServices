@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.1.3
+
+- Bug Fix - Handling one-to-one with foreign key in primary entity - see issue #1
+
 ## 1.1.2
 
 - Bug Fix - better handling of exceptions in sync methods (added better stacktrace)

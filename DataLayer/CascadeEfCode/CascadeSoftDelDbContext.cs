@@ -26,6 +26,8 @@ namespace DataLayer.CascadeEfCode
         public DbSet<EmployeeContract> Contracts { get; set; }
 
         public DbSet<Customer> Companies { get; set; }
+
+        public DbSet<CustomerInfo> CompanyInfos { get; set; }
         public DbSet<Quote> Quotes { get; set; }
 
         public DbSet<ShadowCascadeDelClass> ShadowCascadeDelClasses { get; set; }

@@ -14,6 +14,9 @@ namespace DataLayer.CascadeEfClasses
 
         public string CompanyName { get; set; }
 
+        public int? CustomerInfoId { get; set; }
+        public CustomerInfo MoreInfo { get; set; }
+
         public HashSet<Quote> Quotes { get; set; }
 
         public byte SoftDeleteLevel { get; set; }

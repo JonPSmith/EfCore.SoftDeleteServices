@@ -30,6 +30,8 @@ namespace DataLayer.SingleEfCode
         
         public DbSet<ShadowDelClass> ShadowDelClasses { get; set; }
 
+        public DbSet<Address> Addresses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

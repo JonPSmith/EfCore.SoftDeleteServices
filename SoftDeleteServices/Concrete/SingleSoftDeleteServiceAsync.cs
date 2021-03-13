@@ -78,12 +78,7 @@ namespace SoftDeleteServices.Concrete
         public async Task<IStatusGeneric<int>> SetSoftDeleteAsync(TInterface softDeleteThisEntity, bool callSaveChanges = true)
         {
             if (softDeleteThisEntity == null) throw new ArgumentNullException(nameof(softDeleteThisEntity));
-
-            var keys = _context.Entry(softDeleteThisEntity).Metadata.GetForeignKeys();
-            if (!keys.All(x => x.DependentToPrincipal?.IsCollection == true || x.PrincipalToDependent?.IsCollection == true))
-                //This it is a one-to-one entity - setting a one-to-one as soft deleted causes problems when you try to create a replacement
-                throw new InvalidOperationException("You cannot soft delete a one-to-one relationship. " +
-                                                    "It causes problems if you try to create a new version.");
+            _context.ThrowExceptionIfPrincipalOneToOne(softDeleteThisEntity);
 
             var status = new StatusGenericHandler<int>();
             if (_config.GetSoftDeleteValue.Compile().Invoke(softDeleteThisEntity))
@@ -97,6 +92,8 @@ namespace SoftDeleteServices.Concrete
             status.SetResult(1);        //one changed
             return status;
         }
+
+
 
         /// <summary>
         /// This resets the single soft delete flag so that entity is now visible

@@ -13,5 +13,8 @@ namespace DataLayer.SingleEfClasses
 
         public bool SoftDeleted { get; set; }
         public Guid UserId { get; set; }
+
+        public int? AddressId { get; set; }
+        public Address UserAddress { get; set; }
     }
 }
