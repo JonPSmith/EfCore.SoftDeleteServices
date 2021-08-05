@@ -95,6 +95,7 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
             {
                 context.Database.EnsureCreated();
                 var ceo = Employee.SeedEmployeeSoftDel(context);
+                Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
 
                 var config = new ConfigCascadeDeleteWithUserId(context);
                 var service = new CascadeSoftDelService<ICascadeSoftDelete>(config);
@@ -103,11 +104,19 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 var status = service.SetCascadeSoftDelete(ceo.WorksFromMe.First());
 
                 //VERIFY
-                Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(7 + 6);
-                context.Employees.IgnoreQueryFilters().Count(x => x.SoftDeleteLevel != 0).ShouldEqual(7);
                 status.Message.ShouldEqual("You have soft deleted an entity and its 12 dependents");
+            }
+            using (var context = new CascadeSoftDelDbContext(options))
+            {
+                _output.WriteLine("---------------------\nAfter Cascade SoftDelete of the CTO and his/her staff.");
+                context.Employees.Count().ShouldEqual(4);
+                var allEmployees = context.Employees
+                    .Include(x => x.WorksFromMe)
+                    .ToList();
+                var ceo = allEmployees.Single(x => x.Name == "CEO");
+                Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
             }
         }
 

@@ -33,7 +33,6 @@ namespace Test.UnitTests.Demos
 
                 modelBuilder.Entity<MyEntity>()
                     .HasIndex(x => x.SoftDeleted);
-
             }
         }
 

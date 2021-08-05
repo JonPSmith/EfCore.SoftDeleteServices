@@ -21,7 +21,7 @@ namespace Test.UnitTests.Demos
 
         public class MyDbContext : DbContext
         {
-            private string _userId;
+            private readonly string _userId;
 
             public MyDbContext(DbContextOptions<MyDbContext> options, string userId)
                 : base(options)

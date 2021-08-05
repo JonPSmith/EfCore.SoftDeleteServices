@@ -2,7 +2,6 @@
 // Licensed under MIT license. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using DataLayer.Interfaces;
 using DataLayer.SingleEfClasses;
@@ -42,8 +41,12 @@ namespace Test.UnitTests.SingleSoftDeleteTests
             using (var context = new SingleSoftDelDbContext(options))
             {
                 //VERIFY
-                var book = context.Books.Include(x => x.Reviews).Single();
+                var book = context.Books
+                    .Include(x => x.Reviews)
+                    .Include(x => x.OneToOneRelationship)
+                    .Single();
                 book.Title.ShouldEqual("test");
+                book.OneToOneRelationship.ShouldNotBeNull();
                 book.Reviews.ShouldNotBeNull();
                 book.Reviews.Single().NumStars.ShouldEqual(1);
             }
@@ -145,6 +148,27 @@ namespace Test.UnitTests.SingleSoftDeleteTests
             {
                 context.Books.Count().ShouldEqual(0);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
+            }
+        }
+
+        [Fact]
+        public void TestSoftDeleteServiceSetSoftDeleteOneToOneBad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
+            using (var context = new SingleSoftDelDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.AddBookWithReviewToDb();
+
+                var config = new ConfigSoftDeleteWithUserId(context);
+                var service = new SingleSoftDeleteService<ISingleSoftDelete>(config);
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => service.SetSoftDeleteViaKeys<OneToOne>(1));
+
+                //VERIFY
+                ex.Message.ShouldEqual("You cannot soft delete a one-to-one relationship. It causes problems if you try to create a new version.");
             }
         }
 

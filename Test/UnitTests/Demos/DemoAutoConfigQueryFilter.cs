@@ -58,7 +58,6 @@ namespace Test.UnitTests.Demos
             {
                 foreach (var entityType in modelBuilder.Model.GetEntityTypes())
                 {
-
                     if (typeof(ISoftDelete).IsAssignableFrom(entityType.ClrType))
                     {
                         AddSoftDeleteQueryFilter(entityType);

@@ -12,7 +12,11 @@ namespace Test.EfHelpers
         public static Book AddBookWithReviewToDb(this SingleSoftDelDbContext context, string title = "test")
         {
             var book = new Book
-                { Title = title, Reviews = new List<Review> { new Review { NumStars = 1 } } };
+            {
+                Title = title, 
+                OneToOneRelationship = new OneToOne(),
+                Reviews = new List<Review> { new Review { NumStars = 1 } }
+            };
             context.Add(book);
             context.SaveChanges();
             return book;

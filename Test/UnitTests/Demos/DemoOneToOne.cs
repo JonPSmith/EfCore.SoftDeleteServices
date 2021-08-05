@@ -10,12 +10,12 @@ using Xunit.Extensions.AssertExtensions;
 
 namespace Test.UnitTests.Demos
 {
-    public class Demo2
+    public class DemoOneToOne
     {
         public class Principal
         {
             public int Id { get; set; }
-            public List<Dependent> Dependents { get; set; }
+            public Dependent Dependent { get; set; }
         }
 
         public class Dependent
@@ -53,27 +53,25 @@ namespace Test.UnitTests.Demos
             using var context = new MyDbContext(options);
             context.Database.EnsureCreated();
 
-            var e1 = new Principal{ Dependents = new List<Dependent>
+            var e1 = new Principal
             {
-                new Dependent { SoftDeleted = false }
-            }};
-            var e2 = new Principal { Dependents = new List<Dependent>
-            {
-                new Dependent { SoftDeleted = true }
-            }};
-            context.AddRange(e1,e2);
+                Dependent = new Dependent { SoftDeleted = true }
+            };
+            context.Add(e1);
             context.SaveChanges();
             context.ChangeTracker.Clear();
 
+            context.Principals.Include(x => x.Dependent)
+                .Single().Dependent.ShouldBeNull();
+
             //ATTEMPT
-            var principals = context.Principals
-                .Include(x => x.Dependents)
-                .ToList();
+            var principal = context.Principals.Single();
+            principal.Dependent = new Dependent();
+
+            var ex = Assert.Throws<DbUpdateException>(() => context.SaveChanges());
 
             //VERIFY
-            principals.First().Dependents.Count.ShouldEqual(1);
-            principals.Last().Dependents.Count.ShouldEqual(0);
-
+            ex.InnerException.Message.ShouldEqual("SQLite Error 19: 'UNIQUE constraint failed: Dependent.PrincipalId'.");
         }
     }
 }

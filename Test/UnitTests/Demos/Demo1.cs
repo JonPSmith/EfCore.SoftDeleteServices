@@ -30,6 +30,7 @@ namespace Test.UnitTests.Demos
             {
                 modelBuilder.Entity<MyEntity>()
                     .HasQueryFilter(x => !x.SoftDeleted);
+
                 modelBuilder.Entity<MyEntity>()
                     .HasIndex(x => x.SoftDeleted);
             }

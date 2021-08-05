@@ -152,6 +152,27 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
         }
 
         [Fact]
+        public async Task TestSoftDeleteServiceSetSoftDeleteOneToOneBad()
+        {
+            //SETUP
+            var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
+            using (var context = new SingleSoftDelDbContext(options))
+            {
+                context.Database.EnsureCreated();
+                context.AddBookWithReviewToDb();
+
+                var config = new ConfigSoftDeleteWithUserId(context);
+                var service = new SingleSoftDeleteServiceAsync<ISingleSoftDelete>(config);
+
+                //ATTEMPT
+                var ex = await Assert.ThrowsAsync<InvalidOperationException>(async () => await service.SetSoftDeleteViaKeysAsync<OneToOne>(1));
+
+                //VERIFY
+                ex.Message.ShouldEqual("You cannot soft delete a one-to-one relationship. It causes problems if you try to create a new version.");
+            }
+        }
+
+        [Fact]
         public async Task TestSoftDeleteServiceSetSoftDeleteViaKeysBadKeyType()
         {
             //SETUP
