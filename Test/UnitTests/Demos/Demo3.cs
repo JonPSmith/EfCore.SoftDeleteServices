@@ -5,12 +5,20 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using TestSupport.EfHelpers;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Extensions.AssertExtensions;
 
 namespace Test.UnitTests.Demos
 {
     public class Demo3
     {
+        private ITestOutputHelper _output;
+
+        public Demo3(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         public class MyEntity
         {
             public int Id { get; set; }
@@ -55,6 +63,7 @@ namespace Test.UnitTests.Demos
 
             //VERIFY
             var sql = query.ToQueryString();
+            _output.WriteLine(sql);
             entities.Count().ShouldEqual(1);
         }
     }

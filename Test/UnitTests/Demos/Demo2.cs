@@ -55,25 +55,21 @@ namespace Test.UnitTests.Demos
 
             var e1 = new Principal{ Dependents = new List<Dependent>
             {
-                new Dependent { SoftDeleted = false }
-            }};
-            var e2 = new Principal { Dependents = new List<Dependent>
-            {
+                new Dependent { SoftDeleted = false },
                 new Dependent { SoftDeleted = true }
             }};
-            context.AddRange(e1,e2);
+
+            context.Add(e1);
             context.SaveChanges();
             context.ChangeTracker.Clear();
 
             //ATTEMPT
-            var principals = context.Principals
+            var principal = context.Principals
                 .Include(x => x.Dependents)
-                .ToList();
+                .Single();
 
             //VERIFY
-            principals.First().Dependents.Count.ShouldEqual(1);
-            principals.Last().Dependents.Count.ShouldEqual(0);
-
+            principal.Dependents.Count.ShouldEqual(1);
         }
     }
 }
