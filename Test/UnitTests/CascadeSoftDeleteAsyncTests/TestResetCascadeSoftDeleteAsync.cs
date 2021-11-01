@@ -182,6 +182,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<CascadeSoftDelDbContext>();
+            options.StopNextDispose();
             using (var context = new CascadeSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -191,9 +192,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 var service = new CascadeSoftDelServiceAsync<ICascadeSoftDelete>(config);
 
                 var numSoftDeleted = (await service.SetCascadeSoftDeleteAsync(context.Employees.Single(x => x.Name == "CTO"))).Result;
-                numSoftDeleted.ShouldEqual(7+6);
+                numSoftDeleted.ShouldEqual(7 + 6);
             }
-
             using (var context = new CascadeSoftDelDbContext(options))
             {
                 var config = new ConfigCascadeDeleteWithUserId(context);
@@ -219,6 +219,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             //SETUP
             var userId = Guid.NewGuid();
             var options = SqliteInMemory.CreateOptions<CascadeSoftDelDbContext>();
+            options.StopNextDispose();
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();
@@ -231,7 +232,6 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 var service = new CascadeSoftDelServiceAsync<ICascadeSoftDelete>(config);
                 (await service.SetCascadeSoftDeleteAsync(company)).Result.ShouldEqual(1 + 3 + 3 + (3 * 4));
             }
-
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 var config = new ConfigCascadeDeleteWithUserId(context);

@@ -1,5 +1,9 @@
 # Release Notes
 
+## 6.0.0-preview001
+
+- Updated to Net6-rc.2 preview
+
 ## 1.1.3
 
 - Bug Fix - Handling one-to-one with foreign key in primary entity - see issue #1

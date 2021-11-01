@@ -58,7 +58,7 @@ namespace Test.UnitTests.Demos
             context.SaveChanges();
 
             //ATTEMPT
-            var query = context.MyEntities.FromSqlRaw("SELECT * FROM MyEntities");
+            var query = RelationalQueryableExtensions.FromSqlRaw(context.MyEntities, "SELECT * FROM MyEntities");
             var entities = query.ToList();
 
             //VERIFY

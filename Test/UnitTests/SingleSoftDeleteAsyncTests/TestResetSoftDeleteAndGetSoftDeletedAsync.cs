@@ -40,9 +40,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.Books.Count().ShouldEqual(1);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -98,9 +98,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.BookDdds.Count().ShouldEqual(1);
                 context.BookDdds.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -128,9 +128,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status2.IsValid.ShouldBeTrue(status2.GetAllErrors());
                 status2.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.Books.Count().ShouldEqual(1);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -141,7 +141,6 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
         {
             //SETUP
             var currentUser = Guid.NewGuid();
-            int orderId;
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
             using (var context = new SingleSoftDelDbContext(options))
             {
@@ -156,10 +155,10 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                     { OrderRef = "Diff user Order", SoftDeleted = false, UserId = Guid.NewGuid() };
                 context.AddRange(order1, order2, order3, order4);
                 context.SaveChanges();
-                orderId = order1.Id;
-            }
-            using (var context = new SingleSoftDelDbContext(options, currentUser))
-            {
+                var orderId = order1.Id;
+
+                context.ChangeTracker.Clear();
+
                 var config = new ConfigSoftDeleteWithUserId(context);
                 var service = new SingleSoftDeleteServiceAsync<ISingleSoftDelete>(config);
 
@@ -195,9 +194,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 context.AddRange(order1, order2, order3, order4);
                 context.SaveChanges();
                 orderId = order3.Id;
-            }
-            using (var context = new SingleSoftDelDbContext(options, currentUser))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var config = new ConfigSoftDeleteWithUserId(context);
                 var service = new SingleSoftDeleteServiceAsync<ISingleSoftDelete>(config);
 
@@ -226,14 +225,13 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 var book1 = context.AddBookWithReviewToDb("test1");
                 var book2 = context.AddBookWithReviewToDb("test2");
 
-                var config = new ConfigSoftDeleteWithUserId(context);
-                var service = new SingleSoftDeleteServiceAsync<ISingleSoftDelete>(config);
-                var status = await service.SetSoftDeleteAsync(book1);
+                var config1 = new ConfigSoftDeleteWithUserId(context);
+                var service1 = new SingleSoftDeleteServiceAsync<ISingleSoftDelete>(config1);
+                var status = await service1.SetSoftDeleteAsync(book1);
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
 
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+                context.ChangeTracker.Clear();
+
                 var config = new ConfigSoftDeleteWithUserId(context);
                 var service = new SingleSoftDeleteServiceAsync<ISingleSoftDelete>(config);
 
@@ -267,9 +265,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                     { OrderRef = "Diff user Order", SoftDeleted = false, UserId = Guid.NewGuid() };
                 context.AddRange(order1, order2, order3, order4);
                 context.SaveChanges();
-            }
-            using (var context = new SingleSoftDelDbContext(options, currentUser))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var config = new ConfigSoftDeleteWithUserId(context);
                 var service = new SingleSoftDeleteServiceAsync<ISingleSoftDelete>(config);
 

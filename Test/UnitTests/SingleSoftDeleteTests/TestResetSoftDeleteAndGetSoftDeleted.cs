@@ -39,9 +39,9 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.Books.Count().ShouldEqual(1);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -97,9 +97,9 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.BookDdds.Count().ShouldEqual(1);
                 context.BookDdds.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -127,9 +127,9 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 //VERIFY
                 status2.IsValid.ShouldBeTrue(status2.GetAllErrors());
                 status2.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.Books.Count().ShouldEqual(1);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -142,6 +142,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
             var currentUser = Guid.NewGuid();
             int orderId;
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
+            options.StopNextDispose();
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -168,6 +169,9 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
+
+                context.ChangeTracker.Clear();
+
                 context.Orders.IgnoreQueryFilters().Count().ShouldEqual(4);
                 context.Orders.Count().ShouldEqual(2);
             }
@@ -194,9 +198,9 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 context.AddRange(order1, order2, order3, order4);
                 context.SaveChanges();
                 orderId = order3.Id;
-            }
-            using (var context = new SingleSoftDelDbContext(options, currentUser))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var config = new ConfigSoftDeleteWithUserId(context);
                 var service = new SingleSoftDeleteService<ISingleSoftDelete>(config);
 
@@ -219,6 +223,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
+            options.StopNextDispose();
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -242,6 +247,9 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 //VERIFY
                 softDelBooks.Count.ShouldEqual(1);
                 softDelBooks.Single().Title.ShouldEqual("test1");
+
+                context.ChangeTracker.Clear();
+
                 context.Books.Count().ShouldEqual(1);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(2);
             }
@@ -266,9 +274,9 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                     { OrderRef = "Diff user Order", SoftDeleted = false, UserId = Guid.NewGuid() };
                 context.AddRange(order1, order2, order3, order4);
                 context.SaveChanges();
-            }
-            using (var context = new SingleSoftDelDbContext(options, currentUser))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var config = new ConfigSoftDeleteWithUserId(context);
                 var service = new SingleSoftDeleteService<ISingleSoftDelete>(config);
 

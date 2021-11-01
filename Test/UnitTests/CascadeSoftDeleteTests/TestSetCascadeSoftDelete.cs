@@ -107,16 +107,16 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(7 + 6);
                 status.Message.ShouldEqual("You have soft deleted an entity and its 12 dependents");
-            }
-            using (var context = new CascadeSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 _output.WriteLine("---------------------\nAfter Cascade SoftDelete of the CTO and his/her staff.");
                 context.Employees.Count().ShouldEqual(4);
                 var allEmployees = context.Employees
                     .Include(x => x.WorksFromMe)
                     .ToList();
-                var ceo = allEmployees.Single(x => x.Name == "CEO");
-                Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
+                var readCeo = allEmployees.Single(x => x.Name == "CEO");
+                Employee.ShowHierarchical(readCeo, x => _output.WriteLine(x), false);
             }
         }
 
@@ -374,9 +374,9 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
             {
                 context.Database.EnsureCreated();
                 Employee.SeedEmployeeSoftDel(context);
-            }
-            using (var context = new CascadeSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 var config = new ConfigCascadeDeleteWithUserId(context)
                 {
                     ReadEveryTime = readEveryTime

@@ -24,6 +24,7 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
+            options.StopNextDispose();
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -45,9 +46,8 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(0);
             }
         }
@@ -57,6 +57,7 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
+            options.StopNextDispose();
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -81,7 +82,6 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-
             }
         }
 
@@ -90,6 +90,7 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
+            options.StopNextDispose();
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -111,9 +112,8 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(0);
             }
         }

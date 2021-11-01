@@ -38,9 +38,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
 
                 //ATTEMPT
                 context.AddBookWithReviewToDb();
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 //VERIFY
                 var book = await context.Books.Include(x => x.Reviews).SingleAsync();
                 book.Title.ShouldEqual("test");
@@ -90,9 +90,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.Books.Count().ShouldEqual(0);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -143,9 +143,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.Books.Count().ShouldEqual(0);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -281,9 +281,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.BookDdds.Count().ShouldEqual(0);
                 context.BookDdds.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -310,9 +310,9 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
-            }
-            using (var context = new SingleSoftDelDbContext(options))
-            {
+
+                context.ChangeTracker.Clear();
+
                 context.BookDdds.Count().ShouldEqual(0);
                 context.BookDdds.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
