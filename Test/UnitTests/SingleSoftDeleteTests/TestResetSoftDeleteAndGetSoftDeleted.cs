@@ -41,7 +41,6 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 status.Result.ShouldEqual(1);
 
                 context.ChangeTracker.Clear();
-
                 context.Books.Count().ShouldEqual(1);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -70,6 +69,8 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1);
+
+                context.ChangeTracker.Clear();
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
         }
@@ -99,7 +100,6 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 status.Result.ShouldEqual(1);
 
                 context.ChangeTracker.Clear();
-
                 context.BookDdds.Count().ShouldEqual(1);
                 context.BookDdds.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -129,7 +129,6 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 status2.Result.ShouldEqual(1);
 
                 context.ChangeTracker.Clear();
-
                 context.Books.Count().ShouldEqual(1);
                 context.Books.IgnoreQueryFilters().Count().ShouldEqual(1);
             }
@@ -143,7 +142,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
             int orderId;
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
             options.StopNextDispose();
-            using (var context = new SingleSoftDelDbContext(options))
+            using (var context = new SingleSoftDelDbContext(options, currentUser))
             {
                 context.Database.EnsureCreated();
                 var order1 = new Order
@@ -171,7 +170,6 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 status.Result.ShouldEqual(1);
 
                 context.ChangeTracker.Clear();
-
                 context.Orders.IgnoreQueryFilters().Count().ShouldEqual(4);
                 context.Orders.Count().ShouldEqual(2);
             }
@@ -184,7 +182,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
             var currentUser = Guid.NewGuid();
             int orderId;
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-            using (var context = new SingleSoftDelDbContext(options))
+            using (var context = new SingleSoftDelDbContext(options, currentUser))
             {
                 context.Database.EnsureCreated();
                 var order1 = new Order
@@ -210,6 +208,8 @@ namespace Test.UnitTests.SingleSoftDeleteTests
                 //VERIFY
                 status.IsValid.ShouldBeFalse();
                 status.GetAllErrors().ShouldEqual("Could not find the entry you ask for.");
+
+                context.ChangeTracker.Clear();
                 context.Orders.IgnoreQueryFilters().Count().ShouldEqual(4);
                 context.Orders.Count().ShouldEqual(1);
             }
@@ -261,7 +261,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
             //SETUP
             var currentUser = Guid.NewGuid();
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-            using (var context = new SingleSoftDelDbContext(options))
+            using (var context = new SingleSoftDelDbContext(options, currentUser))
             {
                 context.Database.EnsureCreated();
                 var order1 = new Order
@@ -285,6 +285,8 @@ namespace Test.UnitTests.SingleSoftDeleteTests
 
                 //VERIFY
                 orders.Count.ShouldEqual(1);
+
+                context.ChangeTracker.Clear();
                 orders.Single(x => x.UserId == currentUser).OrderRef.ShouldEqual("Cur user Order, soft del");
                 context.Orders.IgnoreQueryFilters().Count().ShouldEqual(4);
                 var all = context.Orders.IgnoreQueryFilters().ToList();

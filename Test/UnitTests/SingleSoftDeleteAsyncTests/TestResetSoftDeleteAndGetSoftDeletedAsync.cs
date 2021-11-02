@@ -137,12 +137,12 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
         }
 
         [Fact]
-        public async Task TestHardDeleteViaKeysWithUserIdOk()
+        public async Task TestResetSoftDeleteViaKeysAsyncWithUserIdOk()
         {
             //SETUP
             var currentUser = Guid.NewGuid();
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-            using (var context = new SingleSoftDelDbContext(options))
+            using (var context = new SingleSoftDelDbContext(options, currentUser))
             {
                 context.Database.EnsureCreated();
                 var order1 = new Order
@@ -174,13 +174,13 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
         }
 
         [Fact]
-        public async Task TestHardDeleteViaKeysWithWrongUserIdBad()
+        public async Task TestResetSoftDeleteViaKeysAsyncWithWrongUserIdBad()
         {
             //SETUP
             var currentUser = Guid.NewGuid();
             int orderId;
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-            using (var context = new SingleSoftDelDbContext(options))
+            using (var context = new SingleSoftDelDbContext(options, currentUser))
             {
                 context.Database.EnsureCreated();
                 var order1 = new Order
@@ -252,7 +252,7 @@ namespace Test.UnitTests.SingleSoftDeleteAsyncTests
             //SETUP
             var currentUser = Guid.NewGuid();
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-            using (var context = new SingleSoftDelDbContext(options))
+            using (var context = new SingleSoftDelDbContext(options, currentUser))
             {
                 context.Database.EnsureCreated();
                 var order1 = new Order
