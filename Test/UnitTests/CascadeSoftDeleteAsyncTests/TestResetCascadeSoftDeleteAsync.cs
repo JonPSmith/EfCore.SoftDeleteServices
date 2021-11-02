@@ -52,6 +52,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(7 + 6);
+
+                context.ChangeTracker.Clear();
                 context.Employees.Count().ShouldEqual(11);
                 context.Contracts.Count().ShouldEqual(9);
             }
@@ -169,6 +171,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(4 + 3);
+
+                context.ChangeTracker.Clear();
                 var cto = context.Employees.Include(x => x.WorksFromMe).Single(x => x.Name == "CTO");
                 cto.WorksFromMe.Single(x => x.SoftDeleteLevel == 0).Name.ShouldEqual("ProjectManager2");
             }
@@ -205,6 +209,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(7 + 6);
+
+                context.ChangeTracker.Clear();
                 context.Employees.Count().ShouldEqual(11);
                 context.Contracts.Count().ShouldEqual(9);
             }
@@ -244,6 +250,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1 + 3 + 3 + (3 * 4));
                 status.Message.ShouldEqual("You have recovered an entity and its 18 dependents");
+
+                context.ChangeTracker.Clear();
                 context.Quotes.Count().ShouldEqual(3);
             }
         }

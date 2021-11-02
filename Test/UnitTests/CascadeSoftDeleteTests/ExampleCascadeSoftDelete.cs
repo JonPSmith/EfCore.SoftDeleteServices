@@ -38,6 +38,7 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 var customer = Customer.SeedCustomerWithQuotes(context, Guid.Empty);
 
                 //VERIFY
+                context.ChangeTracker.Clear();
                 context.Companies.Count().ShouldEqual(1);
                 context.Quotes.Count().ShouldEqual(4);
                 context.Set<LineItem>().Count().ShouldEqual(4 * 4);
@@ -62,16 +63,16 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 var status = service.SetCascadeSoftDelete(customer.Quotes.First());
 
                 //VERIFY
-
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
+                status.Message.ShouldEqual("You have soft deleted an entity and its 5 dependents");
+
+                context.ChangeTracker.Clear();
                 context.Companies.Count().ShouldEqual(1);
                 context.Quotes.Count().ShouldEqual(3);
                 context.Set<LineItem>().Count().ShouldEqual(3 * 4);
                 context.Set<QuotePrice>().Count().ShouldEqual(3);
-                status.Result.ShouldEqual(1 + 4 + 1);
-                
+                status.Result.ShouldEqual(1 + 4 + 1);            
                 context.Set<LineItem>().IgnoreQueryFilters().Count(x => x.SoftDeleteLevel != 0).ShouldEqual(4);
-                status.Message.ShouldEqual("You have soft deleted an entity and its 5 dependents");
             }
         }
 

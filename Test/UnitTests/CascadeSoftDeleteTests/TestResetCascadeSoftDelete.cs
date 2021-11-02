@@ -45,6 +45,8 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 numSoftDeleted.ShouldEqual(7 + 6);
                 Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
 
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var status = service.ResetCascadeSoftDelete(context.Employees.IgnoreQueryFilters().Single(x => x.Name == "CTO"));
 
@@ -72,6 +74,8 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 var numSoftDeleted = service.SetCascadeSoftDelete(context.Employees.Single(x => x.Name == "CTO")).Result;
                 numSoftDeleted.ShouldEqual(7 + 6);
                 Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
+
+                context.ChangeTracker.Clear();
 
                 //ATTEMPT
                 var status = service.ResetCascadeSoftDelete(context.Employees.IgnoreQueryFilters().Single(x => x.Name == "CTO"), false);
@@ -104,6 +108,8 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 numSoftDeleted.ShouldEqual(7 + 6);
                 Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
 
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var status = service.ResetCascadeSoftDelete(context.Employees.IgnoreQueryFilters().Single(x => x.Name == "CTO"));
 
@@ -130,6 +136,8 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 var numSoftDeleted = service.SetCascadeSoftDelete(context.Employees.Single(x => x.Name == "CTO")).Result;
                 numSoftDeleted.ShouldEqual(7 + 6);
                 Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
+
+                context.ChangeTracker.Clear();
 
                 //ATTEMPT
                 var status = service.ResetCascadeSoftDelete(context.Employees.IgnoreQueryFilters().Single(x => x.Name == "ProjectManager1"));
@@ -161,6 +169,8 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 numOuterSoftDelete.ShouldEqual(4 + 3);
                 Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
 
+                context.ChangeTracker.Clear();
+
                 //ATTEMPT
                 var status = service.ResetCascadeSoftDelete(context.Employees.IgnoreQueryFilters().Single(x => x.Name == "CTO"));
 
@@ -168,6 +178,8 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
                 Employee.ShowHierarchical(ceo, x => _output.WriteLine(x), false);
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(4 + 3);
+
+                context.ChangeTracker.Clear();
                 var cto = context.Employees.Include(x => x.WorksFromMe).Single(x => x.Name == "CTO");
                 cto.WorksFromMe.Single(x => x.SoftDeleteLevel == 0).Name.ShouldEqual("ProjectManager2");
             }

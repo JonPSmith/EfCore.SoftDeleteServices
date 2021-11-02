@@ -103,6 +103,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(7 + 6);
                 status.Message.ShouldEqual("You have hard deleted an entity and its 12 dependents");
+
+                context.ChangeTracker.Clear();
                 context.Employees.IgnoreQueryFilters().Count().ShouldEqual(4);
             }
         }
@@ -186,6 +188,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
                 status.Result.ShouldEqual(1 + 4 + 4 + (4 * 4));
                 status.Message.ShouldEqual("You have hard deleted an entity and its 24 dependents");
+
+                context.ChangeTracker.Clear();
                 context.Quotes.Count().ShouldEqual(0);  
                 context.Quotes.IgnoreQueryFilters().Count().ShouldEqual(4); 
             }
