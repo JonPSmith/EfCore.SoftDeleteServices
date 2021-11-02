@@ -371,14 +371,19 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
         {
             //SETUP
             var logs = new List<string>();
+#if NET6_0_OR_GREATER
             var options = SqliteInMemory.CreateOptionsWithLogTo<CascadeSoftDelDbContext>(log => logs.Add(log));
+#elif NETCOREAPP3_1
+            var options = SqliteInMemory.CreateOptionsWithLogging<CascadeSoftDelDbContext>(log => logs.Add(log.Message));
+#endif
             using (var context = new CascadeSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
                 Employee.SeedEmployeeSoftDel(context);
 
+#if NET6_0_OR_GREATER
                 options.StopNextDispose();
-
+#endif
                 var config = new ConfigCascadeDeleteWithUserId(context)
                 {
                     ReadEveryTime = readEveryTime

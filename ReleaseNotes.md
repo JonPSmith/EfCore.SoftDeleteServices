@@ -1,8 +1,8 @@
 # Release Notes
 
-## 6.0.0-preview001
+## 2.0.0-preview001
 
-- Updated to Net6-rc.2 preview
+- Updated to work with Net6-rc.2 preview
 
 ## 1.1.3
 
