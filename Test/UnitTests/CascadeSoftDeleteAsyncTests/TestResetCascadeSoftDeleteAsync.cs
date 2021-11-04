@@ -186,9 +186,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<CascadeSoftDelDbContext>();
-#if NET6_0_OR_GREATER
             options.StopNextDispose();
-#endif
             using (var context = new CascadeSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -227,9 +225,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             //SETUP
             var userId = Guid.NewGuid();
             var options = SqliteInMemory.CreateOptions<CascadeSoftDelDbContext>();
-#if NET6_0_OR_GREATER
             options.StopNextDispose();
-#endif
             using (var context = new CascadeSoftDelDbContext(options, userId))
             {
                 context.Database.EnsureCreated();

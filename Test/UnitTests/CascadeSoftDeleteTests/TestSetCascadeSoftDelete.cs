@@ -230,7 +230,7 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
         {
             //SETUP
             var logs = new List<string>();
-            var options = SqliteInMemory.CreateOptionsWithLogging<CascadeSoftDelDbContext>(log => logs.Add(log.DecodeMessage()));
+            var options = SqliteInMemory.CreateOptionsWithLogTo<CascadeSoftDelDbContext>(log => logs.Add(log));
             using (var context = new CascadeSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -369,7 +369,7 @@ namespace Test.UnitTests.CascadeSoftDeleteTests
         {
             //SETUP
             var logs = new List<string>();
-            var options = SqliteInMemory.CreateOptionsWithLogging<CascadeSoftDelDbContext>(log => logs.Add(log.DecodeMessage()));
+            var options = SqliteInMemory.CreateOptionsWithLogTo<CascadeSoftDelDbContext>(log => logs.Add(log));
             using (var context = new CascadeSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();

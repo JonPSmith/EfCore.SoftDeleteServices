@@ -25,9 +25,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-#if NET6_0_OR_GREATER
             options.StopNextDispose();
-#endif
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -61,9 +59,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-#if NET6_0_OR_GREATER
             options.StopNextDispose();
-#endif
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
@@ -97,9 +93,7 @@ namespace Test.UnitTests.SingleSoftDeleteTests
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<SingleSoftDelDbContext>();
-#if NET6_0_OR_GREATER
             options.StopNextDispose();
-#endif
             using (var context = new SingleSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
