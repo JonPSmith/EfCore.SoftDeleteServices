@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.0.0
+
+- Updated to work with both EF Core 5 and EF Core 6
+
 ## 2.0.0-preview001
 
 - Updated to work with Net6-rc.2 preview
