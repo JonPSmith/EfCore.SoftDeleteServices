@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.0.1
+
+Bug fix: Cascade delete would fail to soft delete a relationship in certain circumstances - see issue #11
+
 ## 2.0.0
 
 - Updated to work with both EF Core 5 and EF Core 6

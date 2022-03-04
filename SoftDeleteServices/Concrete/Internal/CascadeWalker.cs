@@ -74,7 +74,7 @@ namespace SoftDeleteServices.Concrete.Internal
                             navValue = ValueTaskSyncCheckers.CheckSyncValueTaskWorkedDynamicAndReturnResult<IEnumerable>(navValueTask);
                     }
                     if (navValue == null)
-                        return; //no relationship
+                        continue; //no relationship
                     foreach (var entity in navValue as IEnumerable)
                     {
                         var walkValueTask = WalkEntitiesSoftDelete(entity, (byte)(cascadeLevel + 1));
@@ -95,7 +95,7 @@ namespace SoftDeleteServices.Concrete.Internal
                             navValue = navValueTask.CheckSyncValueTaskWorkedAndReturnResult();
                     }
                     if (navValue == null)
-                        return; //no relationship
+                        continue; //no relationship
                     var walkValueTask = WalkEntitiesSoftDelete(navValue, (byte)(cascadeLevel + 1));
                     if (_isAsync)
                         await walkValueTask;

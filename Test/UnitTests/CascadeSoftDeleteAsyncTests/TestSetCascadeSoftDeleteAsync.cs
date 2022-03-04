@@ -30,7 +30,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
         }
 
         [Fact]
-        public async Task TestCreateEmployeeSoftDelOk()
+        public void TestCreateEmployeeSoftDelOk()
         {
             //SETUP
             var options = SqliteInMemory.CreateOptions<CascadeSoftDelDbContext>();
@@ -225,8 +225,8 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
         }
 
         [Theory]
-        [InlineData(false, 3)]
-        [InlineData(true, 6)]
+        [InlineData(false, 4)]
+        [InlineData(true, 7)]
         public async Task TestCascadeSoftDeleteEmployeeSoftDelWithLoggingOk(bool readEveryTime, int selectCount)
         {
             //SETUP
@@ -235,7 +235,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
             using (var context = new CascadeSoftDelDbContext(options))
             {
                 context.Database.EnsureCreated();
-                var ceo = Employee.SeedEmployeeSoftDel(context);
+                var cto = Employee.SeedEmployeeSoftDel(context).WorksFromMe.First();
 
                 var config = new ConfigCascadeDeleteWithUserId(context)
                 {
@@ -245,7 +245,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
 
                 //ATTEMPT
                 logs.Clear();
-                var status = await service.SetCascadeSoftDeleteAsync(ceo.WorksFromMe.First());
+                var status = await service.SetCascadeSoftDeleteAsync(cto);
 
                 //VERIFY
                 status.IsValid.ShouldBeTrue(status.GetAllErrors());
@@ -449,7 +449,7 @@ namespace Test.UnitTests.CascadeSoftDeleteAsyncTests
         }
 
         [Fact]
-        public async Task TestSeedCompanyWithQuotesQueryIgnoreOnIncludeOk()
+        public void TestSeedCompanyWithQuotesQueryIgnoreOnIncludeOk()
         {
             //SETUP
             var userId = Guid.NewGuid();
