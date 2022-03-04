@@ -37,10 +37,10 @@ namespace Test.UnitTests.IssuesTests
 
             //VERIFY
             var readC = context.Companies
-                .Include(x => x.Addresses)
+                .Include(x => x.Address)
                 .Include(x => x.ExternalIds)
                 .Single();
-            readC.Addresses.Count.ShouldEqual(0);
+            readC.Address.ShouldBeNull();
             readC.ExternalIds.Count.ShouldEqual(1);
         }
 
@@ -104,9 +104,9 @@ namespace Test.UnitTests.IssuesTests
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
                 modelBuilder.Entity<Address>()
-                    .HasOne(a => a.Company)
-                    .WithMany(c => c.Addresses)
-                    .HasForeignKey(a => a.CompanyId)
+                    .HasOne(c => c.Company)
+                    .WithOne(p => p.Address)
+                    .HasForeignKey<Address>(a => a.CompanyId)
                     .OnDelete(DeleteBehavior.ClientCascade)
                     .HasConstraintName("FK_Addresses_Companies");
 
@@ -125,7 +125,7 @@ namespace Test.UnitTests.IssuesTests
         {
             public int Id { get; set; }
             public string Name { get; set; }
-            public ICollection<Address>? Addresses { get; set; }
+            public Address? Address { get; set; }
             public ICollection<ExternalId>? ExternalIds { get; set; }
             public byte SoftDeleteLevel { get; set; }
         }
