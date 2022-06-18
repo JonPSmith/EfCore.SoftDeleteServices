@@ -61,6 +61,10 @@ namespace SoftDeleteServices.Concrete.Internal
                     //This could be changed by enhancing the navigation.PropertyInfo.GetValue(principalInstance);
                     throw new NotImplementedException("Currently only works with navigation links that are properties");
 
+                if (navigation.TargetEntityType.IsOwned()) 
+                    //We ignore owned types
+                    continue;
+
                 //It loads the current navigational value so that we can limit the number of database selects if the data is already loaded
                 var navValue = navigation.PropertyInfo.GetValue(principalInstance);
                 if (navigation.IsCollection)

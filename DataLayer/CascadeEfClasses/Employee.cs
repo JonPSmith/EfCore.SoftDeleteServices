@@ -33,6 +33,11 @@ namespace DataLayer.CascadeEfClasses
 
         public EmployeeContract Contract { get; set; }
 
+        /// <summary>
+        /// This is an owned type entity class
+        /// </summary>
+        public Contacts Contacts { get; set; }
+
         public override string ToString()
         {
             return $"Name: {Name} - has {WorksFromMe?.Count ?? 0} staff, Contract = {Contract?.ContractText ?? "-none-"} SoftDeleteLevel: {SoftDeleteLevel}";

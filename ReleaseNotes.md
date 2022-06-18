@@ -1,4 +1,8 @@
-# Release Notes
+# Release Notes#
+
+## 2.0.2 
+
+Bug fix: Fixes Owned Entities causing a failure - see issue #7
 
 ## 2.0.1
 
