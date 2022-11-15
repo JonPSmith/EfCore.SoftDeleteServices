@@ -10,6 +10,9 @@ using StatusGeneric;
 
 namespace SoftDeleteServices.Concrete
 {
+    /// <summary>
+    /// This defines what the CascadeWalker will do.
+    /// </summary>
     public enum CascadeSoftDelWhatDoing { SoftDelete, ResetSoftDelete, CheckWhatWillDelete, HardDeleteSoftDeleted }
 
     /// <summary>

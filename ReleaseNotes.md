@@ -1,12 +1,16 @@
-# Release Notes#
+# Release Notes
+
+## 3.0.0
+
+- Changed target framework to netstandard2.1 to work with any version of .NET
 
 ## 2.0.2 
 
-Bug fix: Fixes Owned Entities causing a failure - see issue #7
+- Bug fix: Fixes Owned Entities causing a failure - see issue #7
 
 ## 2.0.1
 
-Bug fix: Cascade delete would fail to soft delete a relationship in certain circumstances - see issue #11
+- Bug fix: Cascade delete would fail to soft delete a relationship in certain circumstances - see issue #11
 
 ## 2.0.0
 

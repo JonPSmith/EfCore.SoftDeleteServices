@@ -13,7 +13,7 @@ This library to provide simple soft delete and cascade soft delete in EF Core. I
 - **Fully configurable:** It works with your properties and interfaces. The only rule it has is your Soft Delete property must provide true/false value (normally a 'bool', but could be part of enum status, etc.), or for the cascade delete it must provide a `byte` value.
 - **DI-friendly:** This library is designed to work with dependency injection (DI) and contains a method which will scan for your Soft Delete configuration files and set up all the services you need to use this library.
 
-MIT License. Documentation can be found in the [Repo's Wiki](https://github.com/JonPSmith/EfCore.SoftDeleteServices/wiki).
+MIT License. Documentation can be found in the [Repo's Wiki](https://github.com/JonPSmith/EfCore.SoftDeleteServices/wiki). NuGet available at [EfCore.SoftDeleteServices](https://www.nuget.org/packages/EfCore.SoftDeleteServices).
 
 Here is an image to show the difference between normal (single) soft delete and cascade soft delete.
 
