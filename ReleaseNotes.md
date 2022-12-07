@@ -1,5 +1,9 @@
 # Release Notes
 
+## 3.1.0
+
+- Supports .Net 6 and .Net 7
+
 ## 3.0.0
 
 - Changed target framework to netstandard2.1 to work with any version of .NET
