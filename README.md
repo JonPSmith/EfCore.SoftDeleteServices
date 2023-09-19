@@ -15,11 +15,21 @@ This library to provide simple soft delete and cascade soft delete in EF Core. I
 
 MIT License. Documentation can be found in the [Repo's Wiki](https://github.com/JonPSmith/EfCore.SoftDeleteServices/wiki). NuGet available at [EfCore.SoftDeleteServices](https://www.nuget.org/packages/EfCore.SoftDeleteServices).
 
+## List of versions and which .NET framework they support
+
+The versions of this library has changed to make it easier to create a new version when a new release of .NET farmework. Now the first number defines the .NET version, e.g EfCore.TestSupport version 8.?.? only runs on .NET 8. 
+
+- Version 8.?.?: Supports NET 8
+- Version 2.?.?: Supports NET 6 and 7
+
+_There are older versions of the EfCore.TestSupport library, but .NET lower than .NET 5 are not supported by Microsoft._
+
 Here is an image to show the difference between normal (single) soft delete and cascade soft delete.
 
 ![Two types of soft delete](https://github.com/JonPSmith/EfCore.SoftDeleteServices/blob/master/TheTwoSoftDeleteTypes.png)
 
 *The cascade soft delete is pretty clever, and can handle multi-level soft deletes - see [this section](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/#building-solution-3-cascade-softdeleteservice) from my article [EF Core In depth - Soft deleting data with Global Query Filters](https://www.thereformedprogrammer.net/ef-core-in-depth-soft-deleting-data-with-global-query-filters/).*
+
 
 ## Limitations
 
