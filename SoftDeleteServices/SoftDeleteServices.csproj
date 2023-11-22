@@ -6,10 +6,10 @@
   </PropertyGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net8.0'">
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-rc.1.23419.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-rc.1.23419.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0-rc.1.23419.6" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-rc.1.23419.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'net7.0'">
@@ -33,7 +33,7 @@
 
 	<PropertyGroup>
     <PackageId>EfCore.SoftDeleteServices</PackageId>
-    <PackageVersion>4.0.0-rc1-0001</PackageVersion>
+    <PackageVersion>4.0.0</PackageVersion>
     <Version>4.0.0</Version>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <FileVersion>4.0.0.0</FileVersion>
@@ -41,7 +41,7 @@
     <Description>Services to provide simple soft delete and cascade soft delete in EF Core.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-		- First build using NET 8-rc1 - supports .NET 6, 7 and 8
+		- Update to NET 8 - this version supports .NET 6, 7 and 8
 	</PackageReleaseNotes>
     <Copyright>Copyright (c) 2020 Jon P Smith. Licenced under MIT licence</Copyright>
     <PackageTags>Entity Framework Core</PackageTags>
