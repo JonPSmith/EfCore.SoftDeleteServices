@@ -1,5 +1,10 @@
 # Release Notes
 
+## 8.0.0
+
+- Simpified to one NET type. This makes it easier to update for future NET releases
+- Only supports .NET 8
+
 ## 4.0.0
 
 Update to NET 8 - this version supports .NET 6, 7 and 8
