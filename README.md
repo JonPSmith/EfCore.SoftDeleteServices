@@ -17,6 +17,7 @@ MIT License. Documentation can be found in the [Repo's Wiki](https://github.com/
 
 ## List of versions and which .NET framework they support
 
+- Version 9.0.0: supports NET 8 only (simpler to update to next NET release)
 - Version 8.0.0: supports NET 8 only (simpler to update to next NET release)
 - Version 4.?.?: Supports NET 6, 7 and 8
 - Version 3.?.?: Supports NET 6 and 7

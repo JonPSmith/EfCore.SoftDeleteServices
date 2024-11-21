@@ -1,5 +1,9 @@
 # Release Notes
 
+## 9.0.0
+
+- .NET 9 version
+
 ## 8.0.0
 
 - Only supports .NET 8 - This makes it easier to update for future NET releases
