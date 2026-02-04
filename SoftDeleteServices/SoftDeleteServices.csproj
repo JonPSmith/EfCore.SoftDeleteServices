@@ -8,7 +8,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
 	</ItemGroup>
@@ -20,13 +19,13 @@
 
 	<PropertyGroup>
     <PackageId>EfCore.SoftDeleteServices</PackageId>
-    <PackageVersion>10.0.0</PackageVersion>
-    <Version>10.0.0</Version>
+    <PackageVersion>10.1.0</PackageVersion>
+    <Version>10.1.0</Version>
     <Authors>Jon P Smith</Authors>
     <Description>Services to provide simple soft delete and cascade soft delete in EF Core.</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>
-		.NET 10 version
+		Removed Microsoft.EntityFrameworkCore.Sqlite as its not needed
 	</PackageReleaseNotes>
     <Copyright>Copyright (c) 2020 Jon P Smith. Licenced under MIT licence</Copyright>
     <PackageTags>Entity Framework Core</PackageTags>
